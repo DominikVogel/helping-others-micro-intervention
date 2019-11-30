@@ -1,0 +1,1633 @@
+---
+title: Public Service Employees Help Themselves by Helping Others
+classoption: 12pt, a4paper
+subtitle: A Micro-Intervention Study
+bibliography: Bibliography.bib
+output:
+  bookdown::pdf_document2:
+    fig_caption: yes
+    number_section: no
+    template: latex_template.tex
+    toc: no
+    keep_tex: yes
+  classoption: 12pt
+  html_document: default
+  html_notebook:
+    number_section: no
+  pdf_document:
+    fig_caption: yes
+    keep_tex: yes
+    number_section: no
+    template: latex_template.tex
+    toc: no
+  bookdown::word_document2:
+    toc: no
+  word_document:
+    toc: no
+csl: chicago-author-date.csl
+header-includes:
+- \usepackage[american]{babel}
+- \usepackage[babel]{csquotes}
+- \usepackage{float}
+- \floatplacement{figure}{H}
+- \usepackage{pdflscape}
+- \usepackage{atbegshi}
+- \usepackage{tabularx}
+- \usepackage{array}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}}
+- \usepackage[top=2.54cm, bottom=2.54cm, left=2.54cm, right=2.54cm]{geometry}
+- \usepackage{caption}
+- \usepackage{dcolumn}
+- \usepackage{rotating}
+- \usepackage[doublespacing]{setspace}
+- \clubpenalty10000
+- \widowpenalty10000
+- \displaywidowpenalty=10000
+- \newcolumntype{Z}{>{\raggedright\arraybackslash}X}
+- \newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+- \newcolumntype{C}{>{\centering\arraybackslash}X}
+link-citations: yes
+abstract: |
+  Over the past decade, practitioners and scholars have intensified the discussions around people's expectations from their jobs and how public and private organizations can succeed in the war for talent. In this context, it has become obvious that people not only seek high salaries and career opportunities but also meaningfulness in their daily tasks. Although many public service jobs offer opportunities to help others (prosocial impact) or contribute to society (societal impact), employees tend to become accustomed to these positive aspects or forget about them. This article tests whether a micro-intervention that emphasizes employees' prosocial or societal impact can positively impact their well-being, intention to stay in the job, and willingness to recommend their respective jobs to others. The combined results of three preregistered experiments reveal that micro-interventions can indeed have these effects, particularly if they focus on creating awareness about the jobs' societal impact.
+---
+
+
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, include = FALSE)
+```
+
+```{r packages}
+# install.packages("tidyverse", dep = TRUE)
+# install.packages("cowplot", dep = TRUE)
+# install.packages("frequencies", dep = TRUE)
+# install.packages("sjstats", dep = TRUE)
+# install.packages("effsize", dep = TRUE)
+# install.packages("TOSTER", dep = TRUE)
+# install.packages("broman", dep = TRUE)
+# install.packages("xtable", dep = TRUE)
+# install.packages("weights", dep = TRUE)
+# install.packages("rlang", dep = TRUE)
+# install.packages("apaTables", dep = TRUE)
+# install.packages("ez", dep = TRUE)
+# install.packages("stargazer", dep = TRUE)
+# install.packages("forestplot", dep = TRUE)
+# install.packages("BayesFactor", dep = TRUE)
+# install.packages("MBESS", dep = TRUE)
+# install.packages("here", dep = TRUE)
+# install.packages("ggsignif", dep = TRUE)
+# install.packages("bookdown", dep = TRUE)
+
+set.seed(20180207)
+library(forestplot)
+library(knitr)
+library(rlang)
+library(here)
+library(tidyverse)
+library(ggsignif)
+library(cowplot) # for plots
+```
+
+
+```{r functions}
+# Import self-defined functions
+source('Paper_functions.R')
+```
+
+
+```{r study1}
+# Import Data and analyses of study 1
+source("Paper_s1.R")
+```
+
+
+
+```{r study2}
+# Import Data and analyses of study 2
+source("Paper_s2.R")
+```
+
+
+
+```{r study3}
+# Import Data and analyses of study 3
+source("Paper_s3.R")
+```
+
+
+
+
+
+
+
+
+
+
+ 
+
+# Introduction
+
+Public administration scholars agree that public service jobs have distinct characteristics. They offer the opportunity to make a positive difference in other people's lives [*prosocial impact*; @Bolino.Grant.2016] and to contribute to society at large [*societal impact*; @Jensen.2018]. Both types of job impact fit well into the contemporary scientific and societal discourse on the meaningfulness of work [@Rosso.etal.2010]. The discussion is a part of a broader theoretical discourse on the insight that the monetary and non-financial benefits of a job---such as salary and worktime flexibility---only offer a limited motivational potential. This means that people are, to some extent, motivated by these benefits as they help fulfill basic human needs [@Ryan.Deci.2000]. In contrast to these extrinsic motivators, many people strive to have a meaningful job, which means that the job, in and of itself, is expected to fulfill basic needs [@Ryan.Deci.2000]. Being able to help others and contribute to society at large are such intrinsic job aspects that make a job meaningful.
+
+Substantial evidence from organizational and social psychology literature demonstrates that the opportunity to make a meaningful difference in the lives of others has a large motivational potential [@Grant.etal.2007; @Grant.2008] as it increases job satisfaction [@Wrzesniewski.etal.1997], organizational identification [@Pratt.etal.2006], and performance [@Hackman.Oldham.1980]. Moreover, it also affects employees' private lives by increasing their well-being [@Sonnentag.Grant.2012].
+
+Public service motivation (PSM) research has shown that public service employees are also motivated by the opportunity to contribute to society at large [@Ritz.etal.2016]. Moreover, public service employees with a high PSM tend to have higher job satisfaction [@Homberg.etal.2015], organizational commitment [@Moynihan.Pandey.2007], and performance [@Belle.2013]. As a result, both psychology and PSM research have identified that a meaningful job---i.e., one which enables employees to help others---can have relevant personal and job-related benefits.
+
+However, despite the substantial potential of public service jobs to be meaningful [@Dur.Lent.2019] and the relationship between meaningfulness and well-being, commitment, and performance, research struggles to describe how public managers can utilize these benefits [@Perry.2014; @Christensen.etal.2017]. A substantial research gap is prevalent regarding how concrete managerial actions can benefit from meaningful work opportunities as well as the relationship between such concrete actions and desired employee outcomes.
+
+To this end, we identify micro-interventions---small treatments designed to solve a real-world problem [@Thiese.2014; @Luthans.etal.2006]---as one of these managerial actions that could influence employee work outcomes. Using three preregistered experiments (n = `r obs$final[1]`, `r obs_s2$final[1]`, and `r obs_s3$final[1]`), we test how a micro-intervention that assists employees in recognizing their job's prosocial and societal impact affects various employee outcomes. We  hypothesize that a micro-intervention reflection task would positively affect employees' well-being, decrease their intention to quit their jobs, and increase their willingness to recommend their job to others.
+
+This study contributes, first, to the public administration literature by answering the call for more practically relevant insights into the concrete actions that public managers can take while fulfilling their daily responsibilities [@Pollitt.2017; @Christensen.etal.2017]. We apply insights gained from the organizational psychology literature to the public services context and combine it with knowledge of the positive effects of micro-interventions.
+
+Second, this study contributes to the literature on PSM and what it can offer in the workplace. By building on the extensive insights into PSM and the unique nature of public service jobs [@Ritz.etal.2016], we explicitly recognize the potential effects of prosocial and societal impact micro-interventions on public service jobs. We go beyond the insights given in the organization psychology literature and integrate it with the literature on PSM. We identify previous PSM research and further elaborate on the relevant distinction between the prosocial impact and the societal impact of jobs, which we argue is particularly relevant to public service employees. For our empirical tests, we designed distinct micro-interventions for both the types of impacts and confirm that this distinction is relevant. 
+
+Third, our approach and results contribute to the emerging insights into behavioral public administration and the methods used for the same [@Grimmelikhuijsen.etal.2017]. With three preregistered studies that specifically focus on replication and meta-evaluation, we answer the call for an open and rigorous research approach in public administration [@Zhu.etal.2018; @Perry.2017]. Our findings and discussion focus not only on supported hypotheses but also the consistency across samples. This approach offers a multitude of further research avenues and concrete practical implications, which are further discussed in the discussion section. All the materials, preregistrations, data, and analysis code are available at https://doi.org/10.17605/OSF.IO/W97H4.
+
+
+
+
+
+
+# Theory and Hypotheses
+
+## Two Types of Helping Others: Prosocial and Societal Impact
+
+The literature from the fields of psychology and public administration firmly support the notion that helping others through one's job not only benefits those who receive help but also those who provide the help [@Aknin.BarringtonLeigh.etal.2013]. However, the true meaning of helping others is less clear. We argue that the theoretical distinction between two types of impact is important, especially for public service jobs, to clarify the concept of helping others. The PSM literature provides a well-developed distinction with regard to differentiating employees' motivation. For example, @Andersen.etal.2011 argue that two types of others potentially benefit from the work of public service employees. The specific other can be defined as "another identifiable individual or set of individuals" [@Holdsworth.Morgan.2007, p. 402], while the generalized other is "a social group or organized society with its own social attitudes that 'gives to the individual his unit of self' [@Mead.1934, p. 154]" [@Barlosius.Philipps.2015, p. 11]. The generalized other could be a community, neighborhood, society, or country [@Brewer.etal.2000]. 
+
+Public service employees can be motivated by the ability to help a specific other and/or a generalized other. As shown in Table 1, this distinction leads to two different types of impact: prosocial and societal. Prosocial impact is rooted in social and organizational psychology. @Bolino.Grant.2016 [p. 636] define prosocial impact as "the experience of making a positive difference in the lives of others through one's work" and specify that others could, for example, be "coworkers, customers, or other stakeholders" inside and outside the organization. Prosocial impact addresses the experience of helping a specific other. Empirical research on prosocial impact includes studies on how  fundraisers help grant recipients [@Grant.2008; @Grant.2008b], lifeguards rescue swimmers [@Grant.2008b], and nurses help patients [@Belle.2013; @Belle.2014]. Prosocial impact can be found in all kinds of jobs.
+
+The concept of societal impact arises from the public administration literature, especially on PSM [@Perry.Wise.1990]. Inspired by @Jensen.2018, we define it as the experience of contributing to society at large through one's work. In contrast to prosocial impact, the beneficiaries of societal impact are not specific individuals but the generalized other. Hence, societal impact is very specific for public service jobs. It is related to PSM, which focuses on "[...] motives grounded primarily or uniquely in public institutions and organizations" [@Perry.Wise.1990, p. 368]. One main element of these motives is a commitment to the public interest [@Perry.1996]. Hence, PSM research mainly focuses on helping the generalized other while seldom addressing the specific other as a source of motivation [@Andersen.etal.2011]. @Vandenabeele.2008 and @Andersen.etal.2011, therefore, suggested integrating a customer orientation [@Vandenabeele.2008] or user orientation [@Andersen.etal.2011] dimension into the PSM construct to better capture the elements of helping a specific other.
+
+
+
+
+
+
+\vspace*{2em}
+
+\begin{table}[!htbp]
+\caption{Prosocial and societal impact as two aspects of helping others}
+\label{tab:prosocial-societal}
+\begin{tabularx}{1\textwidth}{L{3cm}ZZ}
+\hline
+& \multicolumn{2}{c}{\textbf{Helping others}} \\ %\hline
+& \textbf{Prosocial impact}                                                                                                    & \textbf{Societal impact}                                                                    \\ \hline
+Definition               & "The experience of making a positive difference in the lives of others through one's work" (Bolino and Grant 2016, 636)                                      & The experience of contributing to society at large through one's work (Jensen 2018)                      \\ \hline
+Beneficiary              & Specific other (i.e., another, identifiable individual or group of individuals, e.g. family and friends) (Holdsworth and Morgan 2007, 402)                    & Generalized other (i.e., "a social group or organized society with its own social attitudes") (Barlösius and Philipps 2015, 11) \\ \hline
+Example of beneficiaries & Coworker, customer, supervisor, subordinate, client, citizen, student, patient                                               & Community, neighborhood, society, country                                                   \\ \hline
+Related constructs       & User orientation (Andersen et al. 2011), client orientation (Vandenabeele 2008), prosocial motivation (Bolino and Grant 2016) & Public service motivation (Perry and Wise 1990)                                              \\ \hline
+\end{tabularx}
+\end{table}
+
+
+
+
+
+
+In the next section, we explain how helping others can influence relevant outcome variables for public service employees. Although we have distinguished between prosocial and societal impact in this section---which we build on for our empirical analyses---we do not formulate different hypotheses for these two types of job impact in the next section because the present literature suggests that they function in similar ways. The theoretical and practical relevance of embedding this distinction in our experimental design is addressed in the discussion section. 
+
+
+
+
+## The Benefits of Helping Others
+
+To understand the causal mechanism between the act of helping others and the personal and work-related outcomes of doing so, we rely on the job characteristics model (JCM) developed by Hackman and Oldham [-@Hackman.Oldham.1976; -@Hackman.Oldham.1975]. The JCM is one of the most influential theories on the motivational aspects of work features [@Parker.etal.2017, p. 408]. It describes how five job characteristics produce three critical psychological states among, leading to positive personal and work-related outcomes such as increased internal work motivation, job satisfaction, performance, and well-being as well as reduced absenteeism and turnover intention [@Humphrey.etal.2007; @Morgeson.Campion.2003].
+
+A crucial element of the JCM are employees' opportunities to impact the lives of others (i.e., task significance), which enhances employees' perception of their job's meaningfulness [@Hackman.Oldham.1976]. A job's level of meaningfulness is one of three critical psychological states that mediate the relationship between the job characteristics and the personal and work outcomes in the JCM. A meta-analysis of work design research shows that experienced meaningfulness is the key mediator in this model [@Humphrey.etal.2007]. Hence, helping others through one's job can---by increasing perceive meaningfulness---positively impact personal and work-related outcomes.
+
+Based on studies conducted by @Sonnentag.Grant.2012 and @Gabriel.Diefendorff.etal.2011, we argue that helping others not only inherently results in personal and work-related outcomes but that it also indirectly results in positive outcomes when employees are explicitly made aware of or recall their work’s impact on others. Therefore, we propose that recalling instances where employees made a positive impact with their job can result in immediate positive outcomes. We believe that it is the process of being aware of the impact employees have with their job and not the sole opportunity to do so that produces these positive outcomes [@Stritch.Christensen.2014; @vanLoon.etal.2018].
+
+The personal outcome of well-being can be considered as a desired outcome in itself as it is one of the most important determinants of psychological and physical health and not only affects people's private lives but also their work performance [@Chao.etal.2015]. Subjective well-being is, therefore, one of the main dependent variables used in this study.
+
+Well-being is defined as "[...] people's cognitive and affective evaluations of their lives" [@Diener.2000, p.34], and it varies depending on the subjective perception of the employees. This subjective well-being is high if people perceive a "[...] high level of positive affect, a low level of negative affect, and a high degree of satisfaction with one's life" [@Deci.Ryan.2008, p.1]. In contrast to overall life satisfaction, which is conceptualized as a relatively stable trait-like attitude, positive and negative affect are state-like and frequently change [@Diener.etal.2009]. We focus on the state-like aspects of positive and negative affect, especially since we test the immediate effects of a micro-intervention. Furthermore, research on well-being shows that positive and negative affect are not endpoints of a one-dimensional well-being continuum but are two related, although separate, factors of well-being [@Ryan.Deci.2001]. Consequently, we differentiate between these two types of affect as separate dimensions of well-being and assert that helping others can increase positive affect and decrease negative affect. 
+
+From a meaningful work perspective, helping others provides employees with a sense of purpose, and, therefore, they perceive their work as meaningful [@Rosso.etal.2010]. Alternatively, experiencing one's actions as being meaningful is at the core of positive affect because people perceive a meaningful life as a life worth living [@King.Napa.1998; @Ryan.Deci.2001]. In contrast, reducing the sense of futility that stems from repetitive work, boredom, or the inability to help others can reduce negative feelings or negative affect [@Cleary.etal.2016].
+
+Based on the above, we formed the following hypotheses:
+
+> H1a: Reflecting on prosocial impact or societal impact increases employees' positive affect.
+>
+> H1b: Reflecting on prosocial impact or societal impact decreases employees' negative affect.
+
+
+Apart from the personal benefits of helping others, such as subjective well-being, it is also important to focus on work-related outcomes. Therefore, in this paper, we address how helping others affects the employees' turnover intention and their willingness to recommend their job to others.
+
+Turnover intention received substantial attention from management researchers in the private [@Park.Shaw.2013; @Waldman.etal.2015] and public sectors [@Moynihan.Pandey.2008; @Lewis.Stoycheva.2016], because a high turnover rate can result in remarkable costs to the organization [@Park.Shaw.2013], resulting in a severe threat to its performance [@Peterson.Luthans.2006]. Public service organizations have a high interest in retaining their personnel and trying to limit the turnover rate [@Moynihan.Pandey.2008; @Lewis.Stoycheva.2016]. Due to this, we identified turnover intention as a relevant variable that requires further investigation, particularly  with regard to the effects of prosocial and societal impact.
+
+We can categorize the theoretical mechanisms outlined by the JCM as pull-to-stay forces [@Waldman.etal.2015]. The JCM argues that the opportunity to help others is one of these pull-to-stay forces. Consequently, we assume that not only the experience of helping others does have an immediate effect, but the anticipation of the opportunity to continue to help in the future does so as well. Hence, the desire to preserve this job benefit drives employees to stay in the job. The expectation that employees can continue to help others and obtain a prolonged sense of meaningfulness thereby increases their willingness to stay in the jobs and reduces their intention to leave.
+
+Moreover, it is not only important to retain existing employees but also attract new ones due to the competition for talent, which makes the public sector experience increasing difficulties in recruiting talented and skilled personnel [@Asseburg.etal.2019; @Ritz.etal.2016]. Word-of-mouth advertising by the employees themselves could help counter these difficulties [@vanHoye.Lievens.2007]. Evidently, employees' willingness to recommend their job to others functions as a prerequisite for the success of such an approach. Despite having identified the public sector's attractiveness and the employees' loyalty to contribute to this attractiveness as being crucial for attracting high-quality job applicants, few studies have empirically tested these factors [@Bankins.Waterhouse.2019]. Therefore, we consider them as crucial and practically relevant outcome variables in our article.
+
+Based on the JCM and the above mentioned theoretical mechanisms, we argue that employees only recommend a job if they are satisfied with it. The ability to positively impact the lives of others, results in people perceiving their jobs as meaningful and thereby increasing their satisfaction.
+
+With regard to the work-related outcomes of helping others we hypothesize:
+
+> H2: Reflection on prosocial impact or societal impact decreases employees' turnover intention.
+> 
+> H3: Reflection on prosocial impact or societal impact increases employees' willingness to recommend their job.
+
+
+# Experimental Design
+
+Having derived our hypotheses, we introduce the experimental design used to test them. We embedded our hypotheses in a micro-intervention that public managers can apply in daily practice. We propose that a micro-intervention that assists employees to recall a instance in which they positively impacted others through their jobs can result in immediate positive outcomes such as the employees' increased well-being, increased willingness to recommend their job to others, and reduced turnover intention.
+
+The term micro-intervention stems from a type of study that are regularly described as intervention studies. According to @Thiese.2014 [p. 199], intervention studies are prospective and "[...] specifically tailored to evaluate direct impacts of treatment or preventive measures [...]." This definition emphasizes the focus on the treatment itself, which is often a drug or a clinical procedure. However, interventions can also be applied in the broad range of social science settings [@Hsu.etal.2017]. Although an intervention study consists of a basic experimental design similar to a laboratory or field experiment, it has a specific context and goal that distinguishes it from other types of experiments.
+
+First, as mentioned earlier, the focus is on the intervention itself. In scientific experiments, researchers often apply a manipulation as a proxy for a certain conceptual variable that is the independent variable of a broader research question. Intervention studies aim to test the effect of an experimental manipulation that can easily be converted into concrete managerial action. Second, intervention studies focus on initiating a change in participants' behavior or attitudes. This explains the relevance of intervention studies in a managerial context, as such studies can be used to test how certain managerial actions lead to behavioral changes. In accordance with @Hsu.etal.2017, we believe that employees' active participation in the treatment of an intervention study is  indispensable since it initiates higher levels of engagement and active cognitive processing. Particularly, an intervention in which active reflection is the core task can induce such engagement and cognitive processing, which, in turn, can result in active and passive learning and continued behavioral changes [e.g., @DiStefano.etal.2016]. To differentiate between this study's treatment and large-scale interventions, such as day-long training sessions and changes to working conditions, we refer to the present treatment as a micro-intervention. Micro-interventions are particularly relevant in the context of public management as they can be easily integrated into daily management practices with little to no extra costs. Moreover, even if their impact is small, the low cost of implementing such interventions may still bring about a profoundly positive return on investment in the workplace [@Gilbert.Foulk.etal.2018].
+
+Therefore, to identify a low-cost and straightforward managerial practice that can induce the desired personal and work-related employee outcomes, we included active reflection on the prosocial and societal impact of work in our hypotheses (see the first part in the theory section).
+
+To administer the micro-intervention, participants were randomly assigned to one of four groups. Group A did not receive any treatment and serves as the passive control group. Group B was asked to "think about a work-related event from the last weeks that gives a good impression about what work [they] do." Since we asked them to think about their respective jobs in general and not about their prosocial or societal impact in particular, this active control group improves the rigor of our design [@Boot.etal.2013] and ensures that possible effects result from the content of the reflection and not merely from the reflection process itself. For the two remaining groups, the reflection task was extended by a request to think about an event that "shows how [their] work made a positive difference in the lives of others" (Group C: prosocial impact) or "how [they] contributed to [their] community, to society, and/or to the public interest in general" (Group D: societal impact). The complete vignettes are provided in Appendix A. We then assessed the dependent variables, manipulation check questions, and control variables.
+
+
+
+
+
+
+
+# Study 1
+
+We preregistered the data collection process, the hypotheses[^1], and the planned analyses on the Open Science Framework (OSF) and strictly followed the preregistration, available at https://doi.org/10.17605/OSF.IO/5WCJQ.
+
+[^1]: All three studies' preregistrations contain a fourth hypothesis on the moderating effect of contact with beneficiaries. Due to issues with the post hoc robustness of the measurement of contact with beneficiaries [@Grant.2012], we decided that including the results in the main text would not bw acceptable. For the sake of transparency and to enable others to learn from our studies, we report the theoretical arguments and the full results in Appendix G.
+
+
+## Sample
+
+We used TurkPrime [@Litman.etal.2017] to administer the study to participants registered on Amazon Mechanical Turk (MTurk) and whom TurkPrime pre-screened as educators working in the U.S. For the first experiment, we decided to focus on employees from the education industry to target a relatively homogeneous group of respondents, at least in terms of their job profile. Consequently, we also emphasized the importance of public services regardless of the ownership, i.e., sector. We conducted a simulation-based a priori power analysis (see the preregistration) considering the effect (*f* = 0.2) reported by @Diener.etal.2009, an alpha of 0.05, and statistical power of 0.8. The analysis suggested a sample size of 100 participants for each group. Anticipating a number of failed attention checks, we recruited 450 participants. Since MTurk limits the number of completed and not the number of started questionnaires , we ultimately had a dataset of `r as.integer(obs[1,2])` participants of which `r as.integer(obs[1,4])` received the treatment and answered the survey completely (see Appendix C). We excluded `r as.integer(obs[1,4]-obs[1,6])` participants because they either failed to pass the two attention checks in the survey (n = `r as.integer(obs[1,4]-obs[1,5])`) or provided completely senseless comments for the reflection task (n = `r as.integer(obs[1,5]-obs[1,6])`). The participants received a payment of \$1.75 for an estimated ten-minute completion time.
+
+The average age of the participants was `r round(as.numeric(mean(df_merge$age, na.rm = TRUE)), 2)` (*SD* = `r broman::myround(as.numeric(sd(df_merge$age, na.rm = TRUE)), 2)`); `r round(as.numeric(mean(df_merge$female, na.rm = TRUE) * 100), 2)` % of the sample consisted of women, and `r round(as.numeric(mean(df_merge$manager_dummy, na.rm = TRUE) * 100), 2)` % of the participants reported to have leadership responsibilities.
+
+
+
+## Operationalizations
+
+We measured *positive and negative affect* according to Diener et al.'s [-@Diener.etal.2009] Scale of Positive and Negative Experience (SPANE), which was designed to assess "[...] the full range of positive and negative experience" [@Diener.etal.2009, p.253f.]. We randomized the item order for each participant. The participants were asked to indicate on a scale from 1 (*strongly disagree*) to 7 (*strongly agree*), how strongly they experience six positive and six negative feelings, such as happiness and anger, at the moment (see Appendix B). Since the constructs showed sufficient internal consistency (Cronbach's $\alpha$ = `r weights::rd(crona_paffect, 2)` (positive affect) and `r weights::rd(crona_naffect, 2)` (negative affect)), we averaged the participants' responses to build the two constructs positive and negative affect. The items were also averaged for all the other constructs.
+
+We adopted Colarelli's [-@Colarelli.1984] three-item measure to assess the participants' *turnover intention* ($\alpha$ = `r weights::rd(crona_turnover, 2)`) and Cable and Judge's [-@Cable.Judge.1996] two-item scale to measure the third dependent variable, i.e., *willingness to recommend one's job to others* ($\alpha$ = `r weights::rd(crona_will, 2)`).
+
+We used Grant's [-@Grant.2008b] measure of *prosocial impact* as the first manipulation check. As a second manipulation check, we asked the participants to indicate what they were asked to reflect upon at the beginning of the survey. The response categories repeated the headings of the reflection tasks: "Your job;" "Your job and how you help others;" "Your job and how it helps society as a whole;" "I do not remember." This second manipulation check, therefore, focused on whether the respondents read and remembered the treatment information, while the first manipulation check assessed whether the treatment also induced higher levels of prosocial impact awareness. Thus, we not only validated whether people had read and processed the information, but also whether this information affected their awareness of prosocial or societal impact.
+
+
+
+
+
+
+
+## Results
+
+We used *R* (version 3.5.3) for all the data management and statistical testing [@RCore].
+
+
+```{r manipulation-check-results}
+# Build dataset with groups 2-4 only
+# (for chi2 test of manipulation check)
+df_merge2_3_4 <- df_merge %>% filter(treatment != 1)
+
+
+
+# Store means and SDs per treatment for prosocial impact
+m_prosocial <- df_merge %>%
+  group_by(treatment) %>%
+  summarise(mean = mean(prosocialimpact, na.rm = TRUE),
+            sd = sd(prosocialimpact, na.rm = TRUE))
+```
+
+As the first step in our analysis, a one-way ANOVA was conducted, and it shows that the experimental groups significantly differ in their responses to the manipulation check and that the perceived prosocial impact is higher for the treatment groups (`r aov_result(aov_prosocialimpact)`). The group means and standard deviations are presented in Table \@ref(tab:anova-results). A $\chi^2$ test reveals that most of the participants correctly remembered the manipulation (`r chi_result(df_merge2_3_4$manipulationcheck, df_merge2_3_4$treatment)`). The detailed results are given in Appendix D. We conclude that the respondents paid sufficient attention to the treatment information. In the two treatment groups the micro-intervention increased the participants' awareness of their prosocial impact, while the general reflection task did not change awareness of job impact.
+
+Table \@ref(tab:anova-results) provides an overview of the dependent variables' means and standard deviations for all four experimental groups along with the results of a one-way ANOVA for each variable. The *F*-test is significant for negative affect, turnover intention, and willingness to recommend the job to others. The differences are not significant for positive affect.
+
+Figure \@ref(fig:meanplot-print) depicts the differences between the experimental groups. Based on our hypotheses, we tested the relevant theoretical differences---i.e., the differences between the passive control group and the two treatment groups (prosocial and societal impact) as well as the differences between the active control group and the two treatment groups. To avoid an inflation of type I error rates caused by multiple testing, we used the @Benjamini.Hochberg.1995 correction to adjust each variable's *p* values. Since we stated and preregistered directional hypotheses, we followed common advice [@Cho.Abe.2013] and used one-sided tests. The results are reported in Table \@ref(tab:results-table) in Appendix E.
+
+
+
+
+
+```{r anova-results-prepare}
+# Copy test statistics to both rows
+Diff2 <- tibble(Diff2 = c(desc$Diff[1], desc$Diff[1],
+                          desc$Diff[3], desc$Diff[3],
+                          desc$Diff[5], desc$Diff[5],
+                          desc$Diff[7], desc$Diff[7],
+                          desc$Diff[9], desc$Diff[9],
+                          desc$Diff[11], desc$Diff[11],
+                          desc$Diff[13], desc$Diff[13],
+                          desc$Diff[15], desc$Diff[15],
+                          ""))
+desc <- bind_cols(desc, Diff2)
+rm(Diff2)
+desc_p1 <- desc[1:12,]
+desc_p1 <- desc_p1 %>%
+  mutate(Diff3 = str_sub(Diff2, 1L, 16L),
+         Diff3 = ifelse(treatment == "", 
+                        str_sub(Diff2, 18L, -1L), 
+                        Diff3)) %>%
+  select(-Diff, -Diff2) %>%
+  rename(Diff = Diff3)
+
+desc_p2 <- desc[13:17,]
+desc_p2 <- desc_p2 %>%
+  mutate(Diff3 = str_sub(Diff2, 1L, 15L),
+         Diff3 = ifelse(treatment == "", 
+                        str_sub(Diff2, 17L, -1L), 
+                        Diff3)) %>%
+  select(-Diff, -Diff2) %>%
+  rename(Diff = Diff3)
+
+desc <- bind_rows(desc_p1, desc_p2)
+rm(desc_p1, desc_p2)
+```
+
+
+```{r anova-results-print, include = TRUE, results='asis'}
+#desc_out <- capture.output(xtable::xtable(desc, type = "latex"))
+#cat(paste(desc_out, sep = "\n", collapse = "\n"), "\n")
+desc_xtable <- xtable::xtable(desc,
+                              caption = "Means, standard deviations,
+                                and tests for group differences for all
+                                four experimental groups",
+label = "tab:anova-results")
+names(desc_xtable) <- c("Variable", 
+                        "Passive Control", 
+                        "Active Control",
+                        "Prosocial Impact",
+                        "Societal Impact",
+                        "Test")
+xtable::align(desc_xtable) <- "llCCCCl"
+xtable::print.xtable(desc_xtable,
+                     type = "latex",
+                     comment = FALSE,
+                     tabular.environment = "tabularx",
+                     width = "1\\textwidth",
+                     include.rownames = FALSE,
+                     caption.placement = "top",
+                     size = "small",
+                     add.to.row = list(list(17),
+                                       "\\hline
+                          \\multicolumn{6}{L{0.95\\textwidth}}{
+                          \\footnotesize \\textbf{Note: }
+                            Passive Control = Passive control group (no reflection task);
+                            Active Control = Active control group (general reflection task);
+                            Prosocial Impact = Prosocial impact group;
+                            Societal Impact = Societal impact group;
+                            Standard deviations in parentheses;
+                            Test statistics are based on one-way ANOVA or Chi-squared test.} \\\\"),
+                     hline.after = c(-1,0, nrow(desc_xtable)-1),
+                     table.placement = "H")
+```
+
+\vspace*{2em}
+
+
+
+
+
+
+
+As depicted in Figure \@ref(fig:meanplot-print) and Appendix E, the micro-intervention's effect differs, depending on the outcome variables. The treatment does not influence the participants' positive affect. However, the intervention influences the participants' negative affect. The two treatment groups show a lower negative affect than the passive control group. Furthermore, we observed a significantly lower negative affect in the prosocial impact group than in the active control group. The two treatment groups show lower turnover intention than the passive control group; however, only the societal impact group significantly differs from the active control group. The two treatment groups also report greater willingness to recommend their job to others than the passive control group, and the societal impact group shows significantly higher values than the active control group. Thus, we find support for Hypotheses 1b, 2, and 3, but not Hypothesis 1a.
+
+The Hedge's *g* value ranges from `r results_table %>% filter(value == "eff_size_g") %>% select(starts_with("1")) %>% mutate_if(is.character, as.numeric) %>% abs(.) %>% min(.)` to `r results_table %>% filter(value == "eff_size_g") %>% select(starts_with("1")) %>% mutate_if(is.character, as.numeric) %>% abs(.) %>% max(.)` with regard to the difference between the passive control group and the treatment groups, hence the effect sizes are considered as ranging from small to large [@Lovakov.Agadullina.2017]. When the treatment groups are compared to the active control group, the effect sizes range from no effect to medium effect (Hedge's *g* = `r results_table %>% filter(value == "eff_size_g") %>% select(starts_with("2")) %>% mutate_if(is.character, as.numeric) %>% abs(.) %>% min(.)` to `r results_table %>% filter(value == "eff_size_g") %>% select(starts_with("2")) %>% mutate_if(is.character, as.numeric) %>% abs(.) %>% max(.)`).
+
+(ref:meanplot) Mean values of the dependent variables separated by treatment groups (Study 1). Points indicate group means, error bars indicate 95 % confidence intervals, brackets indicate significant differences between treatment and control groups. \* *p* < .05, \*\* *p* < .01, \*\*\* *p* < .001 (*p* values were corrected for multiple comparison [@Benjamini.Hochberg.1995]). Positive affect, negative affect, and turnover intention were measured on a seven-point scale, while willingness to recommend the job to others was measured on a five-point scale. n = `r obs$final[2]` (passive control), `r obs$final[3]` (active control), `r obs$final[4]` (prosocial impact), `r obs$final[5]` (societal impact). Source: Authors. Available at https://doi.org/10.6084/m9.figshare.10732217 under a CC-BY 4.0 license.
+
+\vspace{2em}
+
+```{r meanplot-print, include = TRUE, fig.cap='(ref:meanplot)'}
+meanplot
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Study 2
+
+Study 2 uses the same treatments and variables as Study 1. The preregistration is available at https://doi.org/10.17605/OSF.IO/CA73N. The only difference between Study 1 and Study 2 is the targeted population. In Study 1, we focused on a specific public service (education) to test our hypothesis for a homogeneous group of employees. To replicate these findings for the exact same set of hypotheses and test the generalizability of these findings to the broader population of public sector employees, we considered all types of public sector employees, regardless of the public service they provide, for Study 2. 
+
+
+
+## Sample
+
+Again relying on TurkPrime [@Litman.etal.2017] and their classifiers, participants were pre-screened to work in the public sector in the U.S. Those who participated in Study 1 were disallowed from participating in Study 2. Each of the participants was compensated with \$1.75. Having collected the preregistered amount of answers from 450 participants, we had a surprisingly high share of people indicating they are not working in the public sector (n = 124). Therefore, we further recruited 124 participants, resulting in an initial sample of `r obs_s2$initial[1]` participants of which `r obs_s2$complete[1]` completed the survey. We then excluded the participants who did not work in the public sector (n = `r obs_s2$complete[1]-obs_s2$public[1]`). Subsequently, we followed the preregistration and excluded the participants who did not correctly answer the two attention checks (n = `r obs_s2$public[1]-obs_s2$attention[1]`) as well as those who provided completely senseless comments for the reflection task (n = `r obs_s2$attention[1]-obs_s2$nonsense[1]`), resulting in a final sample of n = `r obs_s2$final[1]`. Appendix C provides detailed information about the included and excluded participants for each treatment group.
+
+The participants' average age is `r round(as.numeric(mean(df_merge_s2$age, na.rm = TRUE)), 2)` (*SD* = `r round(as.numeric(sd(df_merge_s2$age, na.rm = TRUE)), 2)`); `r broman::myround(as.numeric(mean(df_merge_s2$female, na.rm = TRUE) * 100), 2)` % of them are women, and `r round(as.numeric(mean(df_merge_s2$manager_dummy, na.rm = TRUE) * 100), 2)` % of the sample reported to have leadership responsibilities.
+
+
+
+
+## Operationalizations
+
+We used the same operationalizations as those used in Study 1, but with an additional variable---perceived societal impact. We added this extra measure because we realized that we had only one overall manipulation check for both the treatments that focused on prosocial impact and not explicitly on societal impact. Hence, we built on Grant's [-@Grant.2008b] measure of prosocial impact and developed three additional items for this variable.
+
+
+
+## Results
+
+```{r manipulation-check-results-s2}
+# Build dataset with groups 2-4 only
+# (for chi2 test of manipulation check)
+df_merge2_3_4_s2 <- df_merge_s2 %>% filter(treatment != 1)
+
+
+
+
+# Prosocial impact
+# Store means and SDs per treatment for prosocial impact
+m_prosocial_s2 <- df_merge_s2 %>%
+  group_by(treatment) %>%
+  summarise(mean = mean(prosocialimpact, na.rm = TRUE),
+            sd = sd(prosocialimpact, na.rm = TRUE))
+
+# Societal impact
+# Store means and SDs per treatment for prosocial impact
+m_societal_s2 <- df_merge_s2 %>%
+  group_by(treatment) %>%
+  summarise(mean = mean(societalimpact, na.rm = TRUE),
+            sd = sd(societalimpact, na.rm = TRUE))
+```
+
+The results of the manipulation check indicate that the participants recalled the treatment information well (see Appendix D) (`r chi_result(df_merge2_3_4_s2$manipulationcheck, df_merge2_3_4_s2$treatment)`). In contrast to Study 1, the treatment failed to produce significant differences between the groups regarding the perception of prosocial impact (`r aov_result(aov_prosocialimpact_s2)`). The perceived societal impact significantly differs between the groups (`r aov_result(aov_societalimpact_s2)`). The means and standard deviations are given in Table \@ref(tab:anova-results-s2).
+
+
+
+
+
+
+```{r anova-results-prepare-s2}
+# Copy test statistics to both rows
+Diff2 <- tibble(Diff2 = c(desc_s2$Diff[1], desc_s2$Diff[1],
+                          desc_s2$Diff[3], desc_s2$Diff[3],
+                          desc_s2$Diff[5], desc_s2$Diff[5],
+                          desc_s2$Diff[7], desc_s2$Diff[7],
+                          desc_s2$Diff[9], desc_s2$Diff[9],
+                          desc_s2$Diff[11], desc_s2$Diff[11],
+                          desc_s2$Diff[13], desc_s2$Diff[13],
+                          desc_s2$Diff[15], desc_s2$Diff[15],
+                          desc_s2$Diff[17], desc_s2$Diff[17],
+                          ""))
+desc_s2 <- bind_cols(desc_s2, Diff2)
+rm(Diff2)
+
+desc_s2_p1 <- desc_s2[1:14,]
+desc_s2_p1 <- desc_s2_p1 %>%
+  mutate(Diff3 = str_sub(Diff2, 1L, 16L),
+         Diff3 = ifelse(treatment == "", str_sub(Diff2, 18L, -1L), Diff3)) %>%
+  select(-Diff, -Diff2) %>%
+  rename(Diff = Diff3)
+
+desc_s2_p2 <- desc_s2[15:19,]
+desc_s2_p2 <- desc_s2_p2 %>%
+  mutate(Diff3 = str_sub(Diff2, 1L, 15L),
+         Diff3 = ifelse(treatment == "", 
+                        str_sub(Diff2, 17L, -1L), 
+                        Diff3)) %>%
+  select(-Diff, -Diff2) %>%
+  rename(Diff = Diff3)
+
+desc_s2 <- bind_rows(desc_s2_p1, desc_s2_p2)
+rm(desc_s2_p1, desc_s2_p2)
+
+```
+
+
+```{r anova-results-print-s2, include = TRUE, results='asis'}
+#desc_out <- capture.output(xtable::xtable(desc, type = "latex"))
+#cat(paste(desc_out, sep = "\n", collapse = "\n"), "\n")
+desc_xtable_s2 <- xtable::xtable(desc_s2,
+                                 caption = "Means, standard deviations,
+                                and tests for group differences for all
+                                four experimental groups",
+                                 label = "tab:anova-results-s2")
+names(desc_xtable_s2) <- c("Variable", 
+                        "Passive Control", 
+                        "Active Control",
+                        "Prosocial Impact",
+                        "Societal Impact",
+                        "Test")
+xtable::align(desc_xtable_s2) <- "llCCCCl"
+xtable::print.xtable(desc_xtable_s2,
+                     type = "latex",
+                     comment = FALSE,
+                     tabular.environment = "tabularx",
+                     width = "1\\textwidth",
+                     include.rownames = FALSE,
+                     caption.placement = "top",
+                     size = "small",
+                     add.to.row = list(list(19),
+                                       "\\hline
+                        \\multicolumn{6}{L{0.95\\textwidth}}{\\footnotesize
+                        \\textbf{Note: } 
+                        Passive Control = Passive control group (no reflection task);
+                        Active Control = Active control group (general reflection task);
+                        Prosocial Impact = Prosocial impact group;
+                        Societal Impact = Societal impact group;
+                        Standard deviations in parentheses;
+                        Test statistics are based on one-way ANOVA or Chi-squared test.} \\\\"),
+                     hline.after = c(-1,0, nrow(desc_xtable_s2)-1),
+                     table.placement = "H")
+```
+
+\vspace*{2em}
+
+
+Regarding hypothesis testing, Table \@ref(tab:anova-results-s2) shows that there are no significant differences between the groups for any of the four dependent variables. A closer inspection of the individual groups through one-sided Welch's *t*-tests and adjusted *p* values (Table \@ref(tab:results-table-s2) in Appendix E) confirms this pattern, which can also be observed in Figure \@ref(fig:meanplot-print-s2). This may be because the manipulations of our independent variables did not produce the same effect in this more heterogeneous sample, although we used the same treatments as in Study 1. This is mainly the case for prosocial impact because the manipulation check was not significant. For societal impact, the manipulation worked, and we are able to test the hypotheses but did not find support for them. To dismiss our inability to support our hypotheses in this more heterogeneous sample we developed a third study with an adjusted design that better controls for this sample heterogeneity. 
+
+
+
+(ref:meanplot-s2) Mean values of the dependent variables separated by treatment groups (Study 2). Points indicate group means, error bars indicate 95 % confidence intervals, brackets indicate significant differences between treatment and control groups. \* *p* < .05, \*\* *p* < .01, \*\*\* *p* < .001 (*p* values were corrected for multiple comparison [@Benjamini.Hochberg.1995]). Positive affect, negative affect, and turnover intention were measured on a seven-point scale, while willingness to recommend the job to others was measured on a five-point scale. n = `r obs_s2$final[2]` (passive control), `r obs_s2$final[3]` (active control), `r obs_s2$final[4]` (prosocial impact), `r obs_s2$final[5]` (societal impact). Source: Authors. Available at https://doi.org/10.6084/m9.figshare.10732268 under a CC-BY 4.0 license.
+
+
+\vspace*{2em}
+
+```{r meanplot-print-s2, include = TRUE, fig.cap="(ref:meanplot-s2)"}
+meanplot_s2
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Study 3
+
+Due to the inconsistent findings obtained for the sample types in Study 1 and Study 2, the goals of Study 3 were threefold. First, we retest the three hypotheses and, thus, replicate the findings from Study 1. Second, we expand our design based on the findings (or lack thereof) from Study 2, potentially resulting from the heterogeneity of the targeted population and the data quality hurdles. Study 3 involves a within-subjects and between-subjects elements. Hence, we are able to control for a potential baseline effect that could explain the difference results in Study 1 and Study 2. To do so, we asked all the respondents to report these baseline levels of the perceived prosocial and societal impact of their job as well as the baseline levels of the dependent variables a few days before the micro-intervention.
+
+Third, given the discrepancy between how TurkPrime classified the respondents and the participants' actual answers, we decided to rely on self-designed quality checks for the respondents, mainly focusing on the consistency of their answers. Therefore, we also changed our respondent recruitment strategy. The preregistration is available at https://doi.org/10.17605/OSF.IO/RMKE9.
+
+
+
+## Sample
+
+We recruited the participants from MTurk using a three-stage process. In the first step, we asked users living in the U.S. about their employment type and the sector in which they work. We rewarded their participation with \$0.10 each. The participants who indicated that they work full-time or part-time in the public sector were invited to take part in the pre-test and were compensated with an additional \$0.80 (step 2). To avoid any bonus-seeking behaviors, we did not disclose that we were screening for public sector employees. Further, the participants of the first two studies were not allowed to participate in Study 3. Finally, we contacted the pre-test participants between one and three days later and invited them to participate in the post-test (step 3). We rewarded post-test participation with \$1.75. In accordance with the preregistration, we iteratively repeated the participant recruitment process until we obtained the target sample size of 450 participants for the post-test. As an extra measure of data quality, we excluded `r obs_s3$receive_treat[1]-obs_s3$public[1]` participants who indicated, in the post-test, that they do not work in the public sector although they claimed otherwise in the pre-test screening. We also excluded the participants who did not correctly answer the two attention checks (n = `r obs_s3$public[1]-obs_s3$attention[1]`), those who they tried to cheat by making senseless comments, as well as those whose answers clearly indicated that they did not work in the public sector (n = `r obs_s3$attention[1]-obs_s3$final[1]`). This resulted in a final sample size of n = `r obs_s3$final[1]`. Appendix C contains detailed information about the included and excluded participants.
+
+The average age of the participants is `r round(as.numeric(mean(df_merge_s3$age, na.rm = TRUE)), 2)` (*SD* = `r round(as.numeric(sd(df_merge_s3$age, na.rm = TRUE)), 2)`); `r broman::myround(as.numeric(mean(df_merge_s3$female, na.rm = TRUE) * 100), 2)` % of the sample are women, and `r round(as.numeric(mean(df_merge_s3$manager_dummy, na.rm = TRUE) * 100), 2)` % of the participants stated having leadership responsibilities.
+
+
+
+
+## Results
+
+```{r manipulation-check-results-s3}
+# Build dataset with groups 2-4 only
+# (for chi2 test of manipulation check)
+df_merge2_3_4_s3 <- df_merge_s3 %>% filter(treatment != 1)
+
+
+# Prosocial impact
+# Store means and SDs per treatment for prosocial impact
+m_prosocial_s3 <- df_merge_s3 %>%
+  group_by(treatment) %>%
+  summarise(mean = mean(prosocialimpact_post, na.rm = TRUE),
+            sd = sd(prosocialimpact_post, na.rm = TRUE))
+
+
+
+# Societal impact
+# Store means and SDs per treatment for prosocial impact
+m_societal_s3 <- df_merge_s3 %>%
+  group_by(treatment) %>%
+  summarise(mean = mean(societalimpact_post, na.rm = TRUE),
+            sd = sd(societalimpact_post, na.rm = TRUE))
+```
+
+Following the procedure that was used for Study 1 and Study 2, we first analyzed the post-test responses. The results of the manipulation check (see Appendix D) show that the participants, on average, recalled the treatment information (`r chi_result(df_merge2_3_4_s3$manipulationcheck, df_merge2_3_4_s3$treatment)`). The treatment again did not produce any significant differences between the groups regarding the perception of prosocial impact (`r aov_result(aov_prosocialimpact_post_s3)`). However, perceived societal impact significantly differs between the two groups (`r aov_result(aov_societalimpact_post_s3)`). Table \@ref(tab:anova-results-s3) displays the means and standard deviations. Overall, we can conclude that, similar to Study 2, the manipulation worked well for the societal impact treatment but not for the prosocial impact treatment. However, in contrast to Study 2, the successful manipulation of societal impact is also reflected in the overall results of Study 3.
+
+
+
+
+
+```{r anova-results-prepare-s3}
+# Copy test statistics to both rows
+Diff2 <- tibble(Diff2 = c(desc_s3$Diff[1], desc_s3$Diff[1],
+                          desc_s3$Diff[3], desc_s3$Diff[3],
+                          desc_s3$Diff[5], desc_s3$Diff[5],
+                          desc_s3$Diff[7], desc_s3$Diff[7],
+                          desc_s3$Diff[9], desc_s3$Diff[9],
+                          desc_s3$Diff[11], desc_s3$Diff[11],
+                          desc_s3$Diff[13], desc_s3$Diff[13],
+                          desc_s3$Diff[15], desc_s3$Diff[15],
+                          desc_s3$Diff[17], desc_s3$Diff[17],
+                          ""))
+desc_s3 <- bind_cols(desc_s3, Diff2)
+rm(Diff2)
+
+desc_s3_p1 <- desc_s3[1:14,]
+desc_s3_p1 <- desc_s3_p1 %>%
+  mutate(Diff3 = str_sub(Diff2, 1L, 16L),
+         Diff3 = ifelse(treatment == "", str_sub(Diff2, 18L, -1L), Diff3)) %>%
+  select(-Diff, -Diff2) %>%
+  rename(Diff = Diff3)
+
+desc_s3_p2 <- desc_s3[15:19,]
+desc_s3_p2 <- desc_s3_p2 %>%
+  mutate(Diff3 = str_sub(Diff2, 1L, 15L),
+         Diff3 = ifelse(treatment == "", 
+                        str_sub(Diff2, 17L, -1L), 
+                        Diff3)) %>%
+  select(-Diff, -Diff2) %>%
+  rename(Diff = Diff3)
+
+desc_s3 <- bind_rows(desc_s3_p1, desc_s3_p2)
+rm(desc_s3_p1, desc_s3_p2)
+
+```
+
+
+```{r anova-results-print-s3, include = TRUE, results='asis'}
+#desc_out <- capture.output(xtable::xtable(desc, type = "latex"))
+#cat(paste(desc_out, sep = "\n", collapse = "\n"), "\n")
+desc_xtable_s3 <- xtable::xtable(desc_s3,
+                                 caption = "Means, standard deviations,
+                                    and tests for group differences for 
+                                    the post-test measures of all four
+                                    experimental groups",
+                                 label = "tab:anova-results-s3")
+names(desc_xtable_s3) <- c("Variable", 
+                        "Passive Control", 
+                        "Active Control",
+                        "Prosocial Impact",
+                        "Societal Impact",
+                        "Test")
+xtable::align(desc_xtable_s3) <- "llCCCCl"
+xtable::print.xtable(desc_xtable_s3,
+                     type = "latex",
+                     comment = FALSE,
+                     tabular.environment = "tabularx",
+                     width = "1\\textwidth",
+                     include.rownames = FALSE,
+                     caption.placement = "top",
+                     size = "small",
+                     add.to.row = list(list(19),
+                                       "\\hline  
+                            \\multicolumn{6}{L{0.95\\textwidth}}{
+                            \\footnotesize \\textbf{Note: }
+                            Passive Control = Passive control group (no reflection task);
+                            Active Control = Active control group (general reflection task);
+                            Prosocial Impact = Prosocial impact group;
+                            Societal Impact = Societal impact group;
+                            Standard deviations in parentheses;
+                            Test statistics are based on one-way ANOVA or Chi-squared test.} \\\\"),
+                     hline.after = c(-1,0, nrow(desc_xtable_s3)-1),
+                     table.placement = "!htb")
+```
+
+\vspace*{1em}
+
+The means and standard deviations of the dependent variables and sample characteristics for all four experimental groups are provided in Table \@ref(tab:anova-results-s3).[^2] In line with the results obtained from Study 1, the ANOVA analyses reveal significant differences between the groups concerning all four dependent variables. Figure \@ref(fig:meanplot-print-s3) shows the differences between the treatment groups and control groups. Welch's *t*-tests with adjusted *p* values (see Appendix E) show that the prosocial impact group significantly differs from the passive control group only in the subject's willingness to recommend their job to others. However, the group that reflected on the societal impact of their work reports significantly higher levels of positive affect and willingness to recommend their job, as well as lower levels of negative affect than the two control groups. The effect on turnover intention is only significant in comparison to the passive control group.
+
+[^2]: We acknowledge that the balance test for leadership responsibilities is significant. However, it should be noted that balance tests, in general, provide very limited meaning [@Austin.etal.2010].
+
+
+
+
+
+(ref:meanplot-s3) Mean values of the post-test measures of the dependent variables separated by treatment groups (Study 3 -- post-test values). Points indicate group means, error bars indicate 95 % confidence intervals, brackets indicate significant differences between treatment and control groups. \* *p* < .05, \*\* *p* < .01, \*\*\* *p* < .001 (*p* values were corrected for multiple comparison [@Benjamini.Hochberg.1995]). Positive affect, negative affect, and turnover intention were measured on a seven-point scale, while willingness to recommend the job to others was measured on a five-point scale. n = `r obs_s3$final[2]` (passive control), `r obs_s3$final[3]` (active control), `r obs_s3$final[4]` (prosocial impact), `r obs_s3$final[5]` (societal impact). Source: Authors. Available at https://doi.org/10.6084/m9.figshare.10732271 under a CC-BY 4.0 license.
+
+We then considered the pre-test answers. By using a within-subjects and between-subjects design, we integrated the dependent variables' baseline levels to obtain a more differentiated view of the treatments' effects. First, we focused on the overall effects and conducted mixed-effects ANOVA tests, as presented in Table \@ref(tab:mixed-effects-anova-results). In the table's third row, we report how the effect of time differs between groups. This Time * Treatment effect is significant for positive affect (`r rmaov_table$paffect[3]`), negative affect (`r rmaov_table$naffect[3]`), and willingness to recommend one's job (`r rmaov_table$will[3]`).
+
+
+\newpage
+
+```{r meanplot-print-s3, include = TRUE, fig.cap="(ref:meanplot-s3)"}
+meanplot_s3
+```
+
+
+
+
+
+
+```{r mixed-effects-anova,include = TRUE, results='asis'}
+rmaov_xtable <- xtable::xtable(rmaov_table,
+                               caption = "Mixed-effects ANOVA of treatment groups and time point in Study 3",
+                               label = "tab:mixed-effects-anova-results")
+names(rmaov_xtable) <- c("", 
+                         "Positive affect", 
+                         "Negative affect",
+                         "Turnover intention", 
+                         "Willingness recommend job")
+xtable::align(rmaov_xtable) <- "lZZZZZ"
+xtable::print.xtable(rmaov_xtable,
+                     type = "latex",
+                     comment = FALSE,
+                     tabular.environment = "tabularx",
+                     width = "1\\textwidth",
+                     include.rownames = FALSE,
+                     caption.placement = "top",
+                     # add.to.row = list(list(3),
+                     # "\\hline  \\multicolumn{5}{L{0.95\\textwidth}}{
+                     # \\footnotesize \\textbf{Note: }
+                     # Test statistics are based on a one-way ANOVA} \\\\"),
+                     # hline.after = c(-1, 0 #, nrow(rmaov_xtable)
+                     #                 ),
+                     table.placement = "!htbp")
+```
+
+\vspace*{2em}
+
+Moreover, Figure \@ref(fig:timeplot-print-s3) reports the dependent variables' mean values in the pre-test and post-test. It shows that there are only very small differences between the pre-test and post-test values for participants of  the control groups. The participants who reflected on their prosocial or societal impact, however, show improved values for all four dependent variables. The only exception is subject's willingness to recommend their job in the societal impact group. Paired *t*-tests with adjusted *p* values, which are reported in Appendix F, support these visual differences.
+
+Thus, with an extended design and additional data quality checks, the results from Study 3 support---for a heterogeneous sample of public sector employees---Hypotheses 1a, 1b, and 2 and partially support Hypothesis 3.
+
+
+
+
+(ref:timeplot-s3) Pre-test and post-test mean values of the dependent variables for each treatment group (Study 3). Dots indicate group mean values of the pre-test and squares indicate group mean values of the post-test. Error bars indicate 95 % confidence intervals. Confidence intervals are adjusted for the repeated measures design, following the procedure proposed by @Cousineau.2005 and @Morey.2008. Positive affect, negative affect, and turnover intention were measured on a seven-point scale, while willingness to recommend one's job was measured on a five-point scale. n = `r obs_s3$final[2]` (passive control), `r obs_s3$final[3]` (active control), `r obs_s3$final[4]` (prosocial impact), `r obs_s3$final[5]` (societal impact). Source: Authors. Available at https://doi.org/10.6084/m9.figshare.10732289 under a CC-BY 4.0 license.
+
+
+```{r timeplot-prepare-s3}
+timeplot_paffect <- timeplot_paffect +
+  labs(x = "", y = "", color = "") +
+  # scale_x_continuous(breaks = c(0.5, 2.5, 4.5, 6.5),
+  #                    labels = c("", "", "", "")) +
+  theme(legend.position="none")
+
+timeplot_naffect <- timeplot_naffect +
+  labs(x = "", y = "", color = "") +
+  # scale_x_continuous(breaks = c(0.5, 2.5, 4.5, 6.5),
+  #                    labels = c("", "", "", "")) +
+  theme(legend.position = c(1, 1), legend.justification = c(1, 1))
+
+timeplot_turnover <- timeplot_turnover +
+  labs(x = "", y = "") +
+  theme(legend.position="none")
+
+timeplot_will <- timeplot_will +
+  labs(x = "", y = "") +
+  theme(legend.position="none") +
+  coord_cartesian(ylim = c(1, 5)) +
+  scale_y_continuous(breaks = c(1, 2, 3, 4, 5),
+                     labels = c("1", "2", "3", "4", "5"))
+```
+
+
+```{r timeplot-print-s3, include = TRUE, fig.cap="(ref:timeplot-s3)", fig.width=7,fig.height=8}
+timeplot_paffect <- timeplot_paffect  + 
+  labs(title = "Positive affect")
+timeplot_naffect <- timeplot_naffect  +
+  labs(title = "Negative affect")
+timeplot_turnover <- timeplot_turnover  +
+ labs(title = "Turnover intention")
+timeplot_will <- timeplot_will  +
+  labs(title = "Willingness recommend job")
+grid_main <- cowplot::plot_grid(timeplot_paffect,
+                   timeplot_naffect,
+                   timeplot_turnover,
+                   timeplot_will,
+                   align = "hv",
+                   ncol = 2#,
+                   # labels = c("Positive affect",
+                   #            "Negative affect",
+                   #            "Turnover intention",
+                   #            "Willingness to rec. job") 
+) 
+
+# Add title 
+# (https://wilkelab.org/cowplot/articles/plot_grid.html#nested-plot-grids)
+title <- ggdraw() + 
+  draw_label(
+    "Figure 4: Differences in pre-test and post-test\nmeasures of the dependent variables in Study 3",
+    fontface = 'bold',
+    x = 0,
+    hjust = 0
+  ) +
+  theme(
+    # add margin on the left of the drawing canvas,
+    # so title is aligned with left edge of first plot
+    plot.margin = margin(0, 0, 0, 7)
+  )
+
+# Merge main grid and title
+cowplot::plot_grid(
+  title, grid_main,
+  ncol = 1,
+  # rel_heights values control vertical title margins
+  rel_heights = c(0.1, 1)
+)
+```
+
+
+# Overall Results
+
+Figure \@ref(figmeta) displays all effects of all three studies. The figure is divided into four major horizontal blocks---one for each dependent variable. In each block, the first three lines represent the interventions' effects in a single study. The first row, for example, shows how reflecting on the prosocial impact (left part) and societal impact (right part) influences positive affect in Study 1. The first number and the upper graph (squares) in each row indicate the effect of the treatment in comparison to the passive control group, while the second number and lower graph (dots) present the effect in comparison to the active control group. The fourth row summarizes the three studies based on an internal meta-analysis [@Maner.2014] that aggregates the effect sizes to a single effect size by using an equal-effects model. Finally, the fifth row presents the effect of the treatments in the pre-test/post-test design used in Study 3. 
+
+To assess the extent to which our results provide evidence in favor of the stated hypotheses, we calculated Bayes factors (*BF*) for the effects observed in each study and a meta-analytic Bayes factor [@Rouder.Morey.2011] for the meta-analytic effects. Bayes factors indicate "[...] the extent to which the data sway our relative belief from one hypothesis to the other" [@Etz.Vandekerckhove.2018, p.10]. The Bayes factors indicate how much more likely our hypotheses (i.e., the intervention has an effect) are than the null hypothesis (i.e., there is no effect), given the data we collected. Bayes factors between 1 and 3 are conventionally considered as anecdotal evidence in favor of a hypothesis, values between 3 and 10 are considered as moderate evidence, and values above 10 indicate the presence of strong evidence [@Wagenmakers.etal.2018b].
+
+
+
+
+
+```{r bayes-factor}
+# import Bayes Factors
+source('Paper_BF.R')
+```
+
+```{r forestplot}
+# import Bayes Factors
+source('Paper_forestplot_prosocial.R')
+source('Paper_forestplot_societal.R')
+```
+
+
+\clearpage
+
+\newgeometry{top = 1.5cm, bottom = 2cm, left = 1.5cm, right = 1.5cm}
+
+\blandscape
+
+
+```{r, out.width="0.85\\linewidth", include=TRUE, fig.align="center", echo=FALSE, fig.cap=c("\\label{figmeta}")}
+knitr::include_graphics(here("doc/fig", "forestplot_combined.pdf"))
+```
+
+\vspace{-0.5cm}\singlespacing \small Note: d = Cohen's *d*, BF = Bayes factor, (b) = between, (w) = within. Meta-analytic effect sizes are calculated using an equal-effects model. Meta-analytic Bayes factors are based on the (one-sided) meta-analytic *t*-test by @Rouder.Morey.2011. The other Bayes factors are calculated using one-sided Bayesian *t*-tests [@Rouder.etal.2009] with a non-informative Cauchy prior ($\delta\ \sim\ \text{Cauchy}^{+/-}$(0, 0.707)). Source: Authors. Available at https://doi.org/10.6084/m9.figshare.10732292 under a CC-BY 4.0 license.
+
+\elandscape
+\clearpage
+
+\restoregeometry
+
+There is strong evidence that a societal reflection task increases positive affect (*BF* = `r bf_paffect_si_passive_meta`), decreases negative affect (*BF* = `r bf_naffect_si_passive_meta`), decreases turnover intention (BF > 1000), and increases willingness to recommend one's job (*BF* > 1000) compared to no reflection task. For the prosocial impact reflection task, the evidence is moderate to strong (*BF* values range between `r bf_paffect_psi_passive_meta` and `r bf_will_psi_passive_meta`). Compared to a general reflection task, the evidence for the specific reflection tasks (prosocial and societal impact) ranges from non-existing (e.g., reducing negative affect) to strong (e.g., increasing positive affect for the societal impact intervention). This implies that a reflection task micro-interventions can have a substantial effects, especially when they are focused on the societal impact of public service jobs.
+
+Study 3's pre-test/post-test design supports this conclusion. Apart from how reflecting on societal impact influences employees' willingness to recommend their job to others, all the effects are significant. The effect sizes are comparable to the meta-analytic effect sizes. The Bayes factors also indicate moderate to strong evidence of the pre-test/post-test design. Only the effects that reflecting on societal impact has on negative affect and willingness to recommend one's job have a Bayes factor below 3.
+
+Therefore, we conclude that our results support Hypotheses H1a (positive affect), H1b (negative affect), H2 (turnover intention), and H3 (willingness to recommend one's job) when comparing the intervention to a group where participants did not reflect on their job. We also observe evidence for Hypotheses 1a (positive affect), 2 (turnover intention), and 3 (willingness to recommend one's job) when comparing a societal impact reflection task to reflecting about one's job in general.
+
+
+
+
+
+
+
+
+
+
+
+
+# Discussion and Avenues for Further Research
+
+In this section, we discuss the three main contribution our findings make to the literature. We also postulate for each of them how future research can further validate and expand on each of these results.
+
+## Micro-Interventions as a Tool for Public Managers
+
+First, we introduce the promising but underexplored concept of micro-interventions to the public administration literature. Our results show that a task that involves reflecting on one's job-as a straightforward micro-intervention-can potentially influence public service employees' well-being, willingness to remain in the organization, and willingness to recommend their job to others. These results complement previous research and emphasize that it is not only important to be motivated to have a positive impact and have the opportunity [@vanLoon.etal.2018] to do so but also to be aware of this job characteristic [@Hackman.Oldham.1976; @Hackman.Oldham.1975]. We suggest that such micro-interventions can have increasing value for public administration practice, particularly because they enable the formulation of problem-based research questions to guide empirical testing and theorizing rather than the other way around [@Pollitt.2017]. In this context, it is important to mention that, contrary to many other experiments, our experimental intervention is not a mere instrument for approximating a theoretical construct; the intervention itself is of interest. Our results contribute to a potential switch from a relatively descriptive approach about how abstract concepts relate to each other towards an approach through which researchers can test actual interventions that can improve relevant public service outcomes [@Moynihan.Pandey.2008; @Christensen.etal.2017; @Asseburg.etal.2019]. Based on this logic, we also chose an actual task for respondents to actively participate in.
+
+Although our studies indicate the managerial potential of a single type of micro-intervention, researchers should explore a substantial range of further paths such as self-engagement tasks via goal setting and mental contrasting [@Oettingen.Reininger.2016]. Since we are among the first researchers to test the seminal proposition concerning the actual advantages of micro-interventions for increasing the prosocial and societal impact awareness of employees, further research should study whether the effectiveness of such micro-interventions is dependent on the employees' sector affiliation or type of service provided.
+
+Moreover, we decided to test the micro-intervention's effect on not only employee well-being, which can be considered a desirable outcome in itself, but also the employees' turnover intention and willingness to recommend their job to others. The latter variables have a higher relevance for improving the overall effectiveness of public services since an organization's positive image can contribute to increasing its attractiveness for talented employees [@Asseburg.etal.2019]. Further research can provide insights on the scope of benefits and the impact of additional outcome variables such as job satisfaction and work engagement as well as actual behaviors such as absenteeism and organizational citizenship behavior. As we built on the Job Characteristics Model [@Hackman.Oldham.1976; @Hackman.Oldham.1975] we assumed that a job's impact would increase the employees' perceived meaningfulness, which, in turn, leads to favorable outcomes. We were not able to test this mediation effect of perceived meaningfulness and, therefore, encourage further research to draw on recent work on meaningful work [e.g., @Rosso.etal.2010] to test this relationship.
+
+The advantage of our online and perceptual approach is that we could test certain general cognitive processes that underlie a reflection task. Nevertheless, further research could---in a field experiment---focus on the actual implementation of such an approach in a real work context and test its effectiveness over a longer duration [e.g., @Gabriel.Diefendorff.etal.2011]. Additional research is needed to address the potential moderating effect of employees' contact with beneficiaries [@Grant.2007; @Grant.etal.2007]. It can be assumed that raising awareness about the prosocial and societal impact of a public service job is more effective among those who do not have regular contact with beneficiaries. Making them aware of this positive aspect of their work might be more eye-opening for these employees than for those who are able to see their positive impact on a daily basis. We hypothesized such an effect in our preregistration but could not properly test it, due to validity issues with the measure of contact with beneficiaries (for further insights on the results and discussion, see Appendix G). 
+
+
+
+
+## A Relevant Distinction Between Prosocial and Societal Impact Awareness
+
+We theoretically distinguish between prosocial and societal impact in this article. While social psychology literature has focused almost exclusively on prosocial impact, we build on the unique nature of public services to argue that there are two distinct dimensions of the impact on the lives of others. We rely on the notion that public service jobs often not only involve directly helping a specific other but also an opportunity to contribute to society at large, i.e., helping a generalized other [e.g., @Schott.etal.2019; @Andersen.etal.2011; @Vandenabeele.2008].
+
+Our results confirm that this distinction between prosocial impact and societal impact is relevant for public services because they clearly result in different effects. Both a general reflection task and a specific reflection task that emphasizes the prosocial impact affect public service employees in similar ways. This means that helping others comes naturally to (many) public service employees and that a prosocial reflection task has no additional triggering effect for them, which might also explain why the prosocial impact manipulation check was insignificant in Study 2 and Study 3. It could also mean that the (explicit) awareness of a direct job impact has no substantial effect on the output variables. From this perspective, public service employees are potentially driven by other types of motivation and are incentivized by other job characteristics [@Asseburg.etal.2019; @Moynihan.Pandey.2008]. However, a reflection task focused on the societal impact elicited effects in Study 1 and Study 3, which suggests that making employees aware of their societal impact is indeed relevant in this particular context. The results also suggest that the societal impact of a job is more latent and needs to be triggered by active reflection to have an effect.
+
+Due to the divergent effects of the prosocial and societal impact, we assert that these two impact types are distinct concepts with a sufficient divergence validity [@Schott.etal.2019]. Micro-interventions have a high management potential in public services but the unique nature of these services needs to be the basis of micro-intervention designs. 
+
+To our knowledge, this is the first study to distinguish between prosocial impact and societal impact in the context of interventions. Further research can help scientifically corroborate this distinction by developing and validating survey items, for example. We believe that such a corroboration would not have to start from scratch because the extensive literature available on public service motivation [@Ritz.etal.2016] can be highly informative for this discussion. 
+
+
+
+
+## An Open Research Approach for Validation and Elaboration
+
+As our approach was focused on transparency and robustness through replication, the results contribute to sustainable inferences about micro-interventions and the role of societal impact in public services [@Wright.Grant.2010]. Furthermore, we have responded to the call for more robust and transparent public administration research [@Perry.2017; @Zhu.etal.2018]. We preregistered all three experiments and closely followed the postulated methodology. We also conducted a meta-analysis to quantify how convincing the accumulated evidence is [@Chalmers.etal.2002]. 
+
+
+
+
+
+## Limitations
+
+Considering the theoretical focus on micro-interventions, the intervention used in this article is of a low intensity. Reflecting for about five minutes on the prosocial or societal impact of a job may not be sufficient for impacting the participants' long-term well-being or turnover intention. Studies with a stronger intensity but low implementation costs might be worthwhile. Using daily interventions over an extended period would be one way to achieve this [e.g., @Gabriel.Diefendorff.etal.2011]. Such diary studies enable the analysis of long-term effects and development of interventions that could be applied in an organizational setting [@Lischetzke.etal.2015].
+
+We recruited participants through Amazon Mechanical Turk. Although experiments focus mainly on internal validity and experimental results based on MTurk samples were found to generalize quite well [@Coppock.2019], we cannot rule out the possibility that the workers' socio-demographic characteristics and their experience with online studies and, potentially, other micro-interventions would reduce the generalizability of our results [@Stritch.etal.2017; @Chandler.Mueller.etal.2014].
+
+
+
+
+
+# Conclusion
+
+The three experiments we conducted yielded mixed results. Through a meta-analytical aggregation of the results, we found that micro-interventions based on prosocial impact and societal impact have divergent effects. Public service employees who reflected on the prosocial or societal impact of their jobs had significantly higher levels of positive affect and willingness to recommend their respective jobs than the control group that did not go through the reflection process. Moreover, reflecting on the prosocial or societal impact resulted in a decrease in negative affect and turnover intention. The effect sizes are, however, larger for the societal impact intervention than the prosocial one. Compared to a control group that reflected on their job in general, only the societal impact intervention positively influenced the positive affect, turnover intention, and employees' willingness to recommend their jobs.
+
+This article emphasizes how public administration research can benefit from the integration of psychological methods and theories. By drawing on psychological research on prosocial impact, we were able to extend the research on PSM and complement prosocial impact with the concept of societal impact. We also showed that psychological research can benefit from theories developed by public administration scholars.
+
+Our results may motivate public administration researchers to focus more on the positive characteristics of public service jobs. While PSM research underlines the importance of needs and motives of public service employees, our work shows that positive effects can be expected if the employees are aware that their job provides opportunities to fulfill these needs, especially the need to contribute to society at large.
+
+With this article we also encourage researchers to develop and test novel micro-interventions that can not only test theories but have the managerial potential to improve the provision of public services. The micro-intervention tested in this article is a starting point for using such reflection tasks in practice and for developing other micro-interventions.
+
+
+
+
+
+
+
+
+
+\newpage
+# References
+
+\singlespace
+<div id="refs"></div>
+
+
+\clearpage
+\pagenumbering{roman}
+
+# (APPENDIX) Appendix {-}
+
+## Appendix A: Vignettes
+
+### Group A (Passive control group without task)
+
+*Group does not get a reflection task*
+
+### Group B (Active control group with general reflection task)
+
+**Your job**
+
+In this study, we are interested in your everyday work experiences. Please take a moment and think about a work-related event from the last **weeks that gives a good impression of what work you do.**
+
+Please describe this event in about three sentences (about 40 to 100 words in total). What happened exactly? What did you do? Where did it happen? Your description is very important for us, as we want to learn more **about people's everyday work.**
+
+### Group C (Prosocial impact)
+
+**Your job, and how you help others**
+
+In this study, we are interested in your everyday work experiences. Please take a moment and think about a work-related event from the last weeks **that gives a good impression of what work you do, and that shows how your work made a positive difference in the lives of others (e.g., coworkers, customers, or other stakeholders).**
+
+Please describe this event in about three sentences (about 40 to 100 words in total). What happened exactly? What did you do? Where did it happen? Your description is very important for us, as we want to learn more **about the positive impact people's work has on other people's lives.**
+
+
+### Group D: (Societal impact)
+
+**Your job, and how it helps society as a whole**
+
+In this study, we are interested in your everyday work experiences. Please take a moment and think about a work-related event from the last weeks **that gives a good impression of what work you do, and that shows how you contributed to your community, to society, and/or to the public interest in general.**
+
+Please describe this event in about three sentences (about 40 to 100 words in total). What happened exactly? What did you do? Where did it happen? Your description is very important for us, as we want to learn more **about the positive impact people's work has on society as a whole.**
+
+
+\clearpage
+
+## Appendix B: Operationalizations
+
+**Well-Being / positive and negative affect** [@Diener.etal.2009]
+
+*With these questions, we would like to know how you feel right now. Please report how strongly you experience each of the following feelings at the moment.*
+
+* Positive
+*	Good
+*	Pleasant
+*	Happy
+*	Joyful
+*	Contented
+
+*	Negative
+*	Bad
+*	Unpleasant
+*	Sad
+*	Afraid
+*	Angry
+
+Scale: 1 ("strongly disagree") to 7 ("strongly agree")
+
+
+**Turnover intention** [@Colarelli.1984]
+
+*With these questions, we would like to know whether you would like to stay in your current job. Please indicate how much you agree or disagree with each of the following statements.*
+
+*	If I have my own way, I will be working for my organization one year from now.
+*	I frequently think of quitting my job.
+*	I am planning to search for a new job during the next 12 months.
+
+Scale: 1 ("strongly disagree") to 7 ("strongly agree")
+
+
+
+**Willingness to recommend job** (adapted from @Cable.Judge.1996)
+
+*With these questions, we would like to know whether you would recommend your job to others. Please indicate how much you agree or disagree with each of the following statements.*
+
+*	How likely would you recommend your job to your friends?
+*	How likely would you tell your friends NOT to do the same job you do?
+
+Scale: 1 = extremely unlikely; 2 = unlikely; 3 = neutral; 4 = likely; 5 = extremely likely
+
+
+
+**Prosocial impact** [@Grant.2008b]
+
+*Please, answer the questions below. To what extent do you agree with the following statements?*
+
+*	I am very conscious of the positive impact that my work has on others.
+*	I am very aware of the ways in which my work is benefiting others.
+*	I feel that I can have a positive impact on others through my work.
+
+Scale: 1 ("strongly disagree") to 7 ("strongly agree")
+
+
+**Societal impact** (adapted from @Grant.2008b)
+
+*Please, answer the questions below. To what extent do you agree with the following statements?*
+
+*	I am very conscious of the positive impact that my work has on society at large.
+*	I am very aware of the ways in which my work is benefiting the society.
+*	I feel that I can have a positive impact on society in general through my work.
+
+Scale: 1 ("strongly disagree") to 7 ("strongly agree")
+
+
+
+**Manipulation Check**
+
+*Think about the beginning of the survey and the formulation of the first question regarding the content of your job: What exactly did we ask you to reflect upon?*
+
+*	Your job
+*	Your job, and how you help others
+*	Your job, and how it helps society as a whole
+*	I don't remember
+
+
+**Contact with beneficiaries** [@Grant.2012]
+
+*We would like to know if you get in contact with other people in your job. Please indicate how much you agree or disagree with each of the following statements.*
+
+*	My job gives me the opportunity to meet the people who benefit from my work.
+*	My job provides me with contact with the people who benefit from my work.
+
+Scale: 1 ("strongly disagree") to 7 ("strongly agree")
+
+
+
+**Contact with beneficiaries -- objective**
+
+*We would like to know if you get in contact with people benefiting from your work.*
+
+*	How often do you have contact with the people who benefit from your work?
+
+Scale: 1 = all the time; 2 = more than once a day; 3 = once a day; 4 = more than once a week; 5 = once a week; 6 = more than once a month; 7 = once a month; 8 = almost never; 9 = never
+
+\clearpage
+
+
+## Appendix C: Flow of participants
+
+### Study 1
+
+![Flow of participants in Study 1 through each stage of the experiment. Reporting as advised by @Appelbaum.etal.2018, as well as @Schulz.Altman.etal.2010.](../doc/fig/CONSORT.pdf)
+
+\clearpage
+
+### Study 2
+
+
+
+![Flow of participants in Study 2 through each stage of the experiment. Reporting as advised by @Appelbaum.etal.2018, as well as @Schulz.Altman.etal.2010.](../doc/fig/CONSORT2.pdf)
+
+\clearpage
+
+### Study 3
+
+![Flow of participants in Study 3 through each stage of the experiment. Reporting as advised by @Appelbaum.etal.2018, as well as @Schulz.Altman.etal.2010.](../doc/fig/CONSORT3.pdf)
+
+
+
+\clearpage
+
+## Appendix D: Additional manipulation check
+
+### Study 1
+
+```{r manipulation-check-results-print, include = TRUE, results = 'asis'}
+mani_xtable <- xtable::xtable(manipulationcheck1,
+                              caption = "Counts of responses to the
+                                          manipulation check")
+names(mani_xtable) <- c("Active Control", 
+                           "Prosocial Impact", 
+                           "Societal Impact")
+xtable::align(mani_xtable) <- "rCCC"
+xtable::print.xtable(mani_xtable,
+                     type = "latex",
+                     comment = FALSE,
+                     tabular.environment = "tabularx",
+                     width = "0.75\\textwidth",
+                     include.rownames = TRUE,
+                     caption.placement = "top",
+                     add.to.row = list(list(4),
+                                       "\\hline 
+                            \\multicolumn{4}{L{0.48\\textwidth}}{
+                            \\footnotesize \\textbf{Note: }
+                            Cells contain absolute counts of responses} \\\\"),
+                     hline.after = c(-1,0, nrow(mani_xtable)),
+                     table.placement = "!htbp")
+```
+
+### Study 2
+
+```{r manipulation-check-results-print-s2, include = TRUE, results = 'asis'}
+mani_xtable_s2 <- xtable::xtable(manipulationcheck1_s2,
+                                 caption = "Counts of responses to the
+                                            manipulation check")
+names(mani_xtable_s2) <- c("Active Control", 
+                           "Prosocial Impact", 
+                           "Societal Impact")
+xtable::align(mani_xtable_s2) <- "rCCC"
+xtable::print.xtable(mani_xtable_s2,
+                     type = "latex",
+                     comment = FALSE,
+                     tabular.environment = "tabularx",
+                     width = "0.75\\textwidth",
+                     include.rownames = TRUE,
+                     caption.placement = "top",
+                     add.to.row = list(list(4),
+                                       "\\hline 
+                            \\multicolumn{4}{L{0.48\\textwidth}}{
+                            \\footnotesize \\textbf{Note: }
+                            Cells contain absolute counts of responses} \\\\"),
+                     hline.after = c(-1,0, nrow(mani_xtable_s2)),
+                     table.placement = "!htbp")
+```
+
+### Study 3
+
+```{r manipulation-check-results-print-s3, include = TRUE, results = 'asis'}
+mani_xtable_s3 <- xtable::xtable(manipulationcheck1_s3,
+                                 caption = "Counts of responses to the
+                                              manipulation check")
+names(mani_xtable_s3) <- c("Active Control", 
+                           "Prosocial Impact", 
+                           "Societal Impact")
+xtable::align(mani_xtable_s3) <- "rCCC"
+xtable::print.xtable(mani_xtable_s3,
+                     type = "latex",
+                     comment = FALSE,
+                     tabular.environment = "tabularx",
+                     width = "0.75\\textwidth",
+                     include.rownames = TRUE,
+                     caption.placement = "top",
+                     add.to.row = list(list(4),
+                                       "\\hline  
+                            \\multicolumn{4}{L{0.48\\textwidth}}{
+                            \\footnotesize \\textbf{Note: }
+                            Cells contain absolute counts of responses} \\\\"),
+                     hline.after = c(-1,0, nrow(mani_xtable_s3)),
+                     table.placement = "!htbp")
+```
+
+
+
+\clearpage
+
+\newgeometry{top = 1.5cm, bottom = 2cm, left = 1.5cm, right = 1.5cm}
+\begin{landscape}
+
+\subsection*{Appendix E: Pairwise comparisons of control groups and treatment groups}
+
+\subsubsection*{Study 1}
+
+```{r results-table-print-pre}
+results_table2 <- results_table %>%
+  mutate(var = as.character(var)) %>%
+  mutate(var = ifelse(value == "eff_size_g",
+                      NA, var),
+         var = ifelse(value == "test",
+                      NA, var)) %>%
+  mutate(var = factor(var,
+                      levels = c("paffect", "naffect", "turnover", "will"),
+                      labels= c("Positive Affect",
+                                "Negative Affect",
+                                "Turnover Intention",
+                                "Willingness recommend job"))) %>%
+  mutate(value = factor(value,
+                        labels = c("Mean difference",
+                                   "Hedge's g",
+                                   "Welch's t-test"))) 
+results_table2
+```
+
+```{r results-table-print, include=TRUE, results='asis'}
+results_xtable <- xtable::xtable(results_table2,
+                                 caption = "Group comparisons with mean
+                                            differences, effect sizes,
+                                            and Welch's \\textit{t}-tests",
+                                 label = "tab:results-table")
+names(results_xtable) <- c("", "", "Passive Control vs. Prosocial Impact",
+                           "Passive Control vs. Societal Impact",
+                           "Active Control vs. Prosocial Impact",
+                           "Active Control vs. Societal Impact")
+xtable::align(results_xtable) <- "lllZZZZ"
+xtable::print.xtable(results_xtable,
+                     type = "latex",
+                     comment = FALSE,
+                     tabular.environment = "tabularx",
+                     width = "1.15\\textwidth",
+                     size = "\\footnotesize",
+                     include.rownames = FALSE,
+                     caption.placement = "top",
+                     add.to.row = list(list(12),
+                                       "\\hline  
+                        \\multicolumn{6}{L{1.1\\textwidth}}{
+                        \\footnotesize \\textbf{Note: }
+                        Mean differences are tested using one-sided Welch's
+                        two sample \\textit{t}-tests. Hedge's \\textit{g} = effect size.
+                        \\textit{p} values are adjusted using Benjamini-Hochberg correction.
+                        Passive Control = Passive control group, 
+                        Active Control = Active control group,
+                        Prosocial Impact = Prosocial impact group,
+                        Societal Impact = Societal impact group.} \\\\"),
+                     hline.after = c(-1,0, nrow(results_xtable)),
+                     table.placement = "!htbp")
+```
+
+\clearpage
+
+\subsubsection*{Study 2}
+
+
+```{r results-table-print-pre-s2}
+results_table2_s2 <- results_table_s2 %>%
+  mutate(var = as.character(var)) %>%
+  mutate(var = ifelse(value == "eff_size_g",
+                      NA, var),
+         var = ifelse(value == "test",
+                      NA, var)) %>%
+ mutate(var = factor(var,
+                      levels = c("paffect", "naffect", "turnover", "will"),
+                      labels= c("Positive Affect",
+                                "Negative Affect",
+                                "Turnover Intention",
+                                "Willingness recommend job"))) %>%
+  mutate(value = factor(value,
+                        labels = c("Mean difference",
+                                   "Hedge's g",
+                                   "Welch's t-test"))) 
+
+results_table2_s2
+```
+
+```{r results-table-print-s2, include=TRUE, results='asis'}
+results_xtable_s2 <- xtable::xtable(results_table2_s2,
+                                    caption = "Group comparisons with mean
+                                                differences, effect sizes,
+                                                and Welch's \\textit{t}-tests",
+                                    label = "tab:results-table-s2")
+names(results_xtable_s2) <- c("", "", "Passive Control vs. Prosocial Impact",
+                           "Passive Control vs. Societal Impact",
+                           "Active Control vs. Prosocial Impact",
+                           "Active Control vs. Societal Impact")
+xtable::align(results_xtable_s2) <- "lllZZZZ"
+xtable::print.xtable(results_xtable_s2,
+                     type = "latex",
+                     comment = FALSE,
+                     tabular.environment = "tabularx",
+                     width = "1.15\\textwidth",
+                     size = "\\footnotesize",
+                     include.rownames = FALSE,
+                     caption.placement = "top",
+                     add.to.row = list(list(12),
+                                       "\\hline  
+                        \\multicolumn{6}{L{1.1\\textwidth}}{
+                        \\footnotesize \\textbf{Note: }
+                        Mean differences are tested using one-sided Welch's
+                        two sample \\textit{t}-tests. Hedge's \\textit{g} = effect size.
+                        \\textit{p} values are adjusted using Benjamini-Hochberg correction.
+                        Passive Control = Passive control group, 
+                        Active Control = Active control group,
+                        Prosocial Impact = Prosocial impact group,
+                        Societal Impact = Societal impact group.} \\\\"),
+                     hline.after = c(-1,0, nrow(results_xtable_s2)),
+                     table.placement = "!htbp")
+
+```
+
+\clearpage
+
+\subsubsection*{Study 3}
+
+
+
+```{r results-table-print-pre-s3}
+results_table2_s3 <- results_table_s3 %>%
+  mutate(var = as.character(var)) %>%
+  mutate(var = ifelse(value == "eff_size_g",
+                      NA, var),
+         var = ifelse(value == "test",
+                      NA, var)) %>%
+  mutate(var = factor(var,
+                      levels = c("paffect_post", 
+                                 "naffect_post", 
+                                 "turnover_post",
+                                 "will_post"),
+                      labels= c("Positive Affect",
+                                "Negative Affect",
+                                "Turnover Intention",
+                                "Willingness recommend job"))) %>%
+  mutate(value = factor(value,
+                        labels = c("Mean difference",
+                                   "Hedge's g",
+                                   "Welch's t-test"))) 
+results_table2_s3
+```
+
+```{r results-table-print-s3, include=TRUE, results='asis'}
+results_xtable_s3 <- xtable::xtable(results_table2_s3,
+                                    caption = "Group comparisons with mean
+                                                  differences, effect sizes,
+                                                  and Welch's \\textit{t}-tests",
+                                    label = "tab:results-table-s3")
+names(results_xtable_s3) <- c("", "", "Passive Control vs. Prosocial Impact",
+                           "Passive Control vs. Societal Impact",
+                           "Active Control vs. Prosocial Impact",
+                           "Active Control vs. Societal Impact")
+xtable::align(results_xtable_s3) <- "lllZZZZ"
+xtable::print.xtable(results_xtable_s3,
+                     type = "latex",
+                     comment = FALSE,
+                     tabular.environment = "tabularx",
+                     width = "1.15\\textwidth",
+                     size = "\\footnotesize",
+                     include.rownames = FALSE,
+                     caption.placement = "top",
+                     add.to.row = list(list(12),
+                                       "\\hline 
+                        \\multicolumn{6}{L{1.1\\textwidth}}{
+                        \\footnotesize \\textbf{Note: }
+                        Mean differences are tested using one-sided Welch's
+                        two sample \\textit{t}-tests. Hedge's \\textit{g} = effect size.
+                        \\textit{p} values are adjusted using Benjamini-Hochberg correction.
+                        Passive Control = Passive control group, 
+                        Active Control = Active control group,
+                        Prosocial Impact = Prosocial impact group,
+                        Societal Impact = Societal impact group.} \\\\"),
+                     hline.after = c(-1,0, nrow(results_xtable_s3)),
+                     table.placement = "!htbp")
+```
+
+
+
+\end{landscape}
+\restoregeometry
+
+
+\newgeometry{top = 1.5cm, bottom = 2cm, left = 1.5cm, right = 1.5cm}
+\begin{landscape}
+
+\subsection{Appendix F: Paired t-tests for differences in pre and post-test scores in study 3}
+
+
+
+```{r results-table-time-print-s3, include=TRUE, results='asis'}
+results_xtable_time_s3 <- xtable::xtable(results_table2_time_s3,
+                                         caption = "Paired t-test per treatment group
+                                                    with effect sizes",
+                                         label = "tab:results-table-time-s3")
+names(results_xtable_time_s3) <- c("", "", "Control",
+                                   "Active control",
+                                   "Prosocial",
+                                   "Societal")
+xtable::align(results_xtable_time_s3) <- "lllllll"
+xtable::print.xtable(results_xtable_time_s3,
+                     type = "latex",
+                     comment = FALSE,
+                     tabular.environment = "tabularx",
+                     width = "1.25\\textwidth",
+                     size = "\\footnotesize",
+                     include.rownames = FALSE,
+                     caption.placement = "top",
+                     add.to.row = list(list(12),
+                                       "\\hline  
+                            \\multicolumn{6}{L{1.1\\textwidth}}{
+                            \\footnotesize \\textbf{Note: }
+                            Mean differences are tested using Welch's one-sided
+                            paired \\textit{t}-tests. Hedge's \\textit{g} = effect size.
+                            \\textit{p} values are adjusted using 
+                            Benjamini-Hochberg correction.} \\\\"),
+                     hline.after = c(-1,0, nrow(results_xtable_time_s3)),
+                     table.placement = "!htbp")
+```
+
+\end{landscape}
+\restoregeometry
+
+
+
+## Appendix G: Testing the moderating effect of contact with beneficiaries
+
+\singlespace
+
+*In our three experiments' preregistrations, we also included a fourth hypothesis that focused on the moderating role of beneficiary contact. In this section, we report our initial hypothesis derivation for this moderating effect and the results of the three experiments. These results are not only important input for designing similar and elaborated experiments in future research, but also for postulating new avenues for further research. However, we did not include this in our main article (1) for reasons of conciseness and (2) since the treatment affected the measures that we adopted from the literature to operationalize beneficiary contact, we, therefore, cannot use these measures to test the moderating effect we hypothesized. As a result, we cannot make any substantial interpretations based on these measures. However, since we conducted our experiments sequentially, we could make adaptations for each new experiment, based on these insights into the robustness of the applied measures. Therefore, we also provide an insight into those consideration: The process shows our learning points concerning good measures for contact with beneficiaries. These learning points are, therefore, relevant complementary information to consider for building and elaborating on our main analysis's findings.*
+
+
+### Theory and hypothesis
+
+Early research on job characteristics [@Hackman.Lawler.1971] has already described the frequency and depth of contact with other people as an element that characterizes the job. Jobs do not only differ in the degree of autonomy or the variety of tasks, but also in the opportunities they provide to interact with other people [@Grant.etal.2007]. However, research on job characteristics and job design has neglected this vital interaction element of a job [@Grant.etal.2007]. As @Grant.etal.2007 argue, the limited attention that relational characteristics received in Hackman and Oldham's [-@Hackman.Oldham.1976] job characteristics model (JCM) also reflects this lack of research. @Hackman.Oldham.1976 only considered one such element-a job's task significance, which is "the degree to which an employee's work affects the health and well-being of other people" [@Grant.etal.2007, p.54].
+
+Another vital relational element of a job's characteristics "[...] is the degree to which a job is relationally structured to provide opportunities for employees to interact and communicate with the people affected by their work" [@Grant.2007, p.398]. @Grant.2007 calls this *contact with beneficiaries*. Jobs do not only differ in the extent to which they positively affect others (task significance), but also in the extent to which employees can observe the positive effects they bring about with their work (contact with beneficiaries) [@Grant.2007; @Grant.etal.2007].
+
+Research in psychology, as well as public management, has shown that contact with beneficiaries has a direct impact on job performance [e.g., @Belle.2013; @Grant.2008b; @Grant.etal.2007] and moderates transformational leadership's effect on performance [@Belle.2014], as well as volunteering [@Grant.2012b]. People are more motivated in their job and perform better if they directly experience the prosocial impact their work has or will have.
+
+In contrast to previous research on contact with beneficiaries, we are not interested in how the manipulation of the participants' contact with beneficiaries affects an outcome. Instead, we want to know how the participants' regular interaction with those who benefit from their work affects the studied outcomes. Considering the evidence about the positive effects, it might surprise that we assume contact with beneficiaries to have a buffering effect on how the reflection task influences the studied outcomes. The theoretical argument is that those who have regular contact with beneficiaries are very aware of the prosocial and societal impact they have [@Grant.etal.2007; @Grant.2007]. However, if persons are already aware of their prosocial and societal impact, asking them to reflect on their impact is likely to have a less substantial effect.
+
+> H4: The effect of reflection on prosocial or societal impact on affective well-being, turnover intention, and willingness to recommend job is stronger for those with low contact with beneficiaries
+
+
+### Operationalization
+
+In order to assess the participants' *contact with beneficiaries*, we used two items that @Grant.2012 developed: "My job gives me the opportunity to meet the people who benefit from my work" and "My job provides me with contact with the people who benefit from my work." (1 = *strongly disagree*; 7 = *strongly agree*).
+
+In Study 1, we found that our treatment influenced not only the dependent variables, but also the participants' perception of contact with beneficiaries. This is likely owing to people mainly recalling situations with beneficiaries when they reflect on helping others, despite our broad conceptualization of specific others, including coworkers, customers and other stakeholders. This might, thus, have influenced their perceptions of contact with beneficiaries, because the measure we used from @Grant.2012b probes for a subjective sense about contact with beneficiaries, rather than a more objective indication of time-based frequencies. We added a variable intended to reflect a more objective degree of contact with beneficiaries. In Studies 2 and 3, we also asked the participants how often they have contact with the people who benefit from their work. We changed the response scale to the ordinal classification: *all the time* (1); *more than once a day* (2); *once a day* (3); *more than once a week* (4); *once a week* (5); *more than once a month* (6); *once a month* (7); *almost never* (8); *never* (9).
+
+
+
+### Results
+
+#### Study 1
+
+We use ordinary least squares regression to test whether the treatment's effect is stronger for those who have low contact with beneficiaries (H4). According to the results in Table \@ref(tab:bene-s1), we do not find significant interaction effects and, therefore, the results do not support Hypothesis 4. However, this study's experimental treatment (`r aov_bene_result`) notably affected the measure for contact with beneficiaries [@Grant.2012]. Since this measure was presumably not suitable, we added an alternative measure for contact with beneficiaries in the second study.
+
+
+
+
+
+
+```{r reg-print, include = TRUE, results="asis"}
+stargazer::stargazer(reg_paffect3, reg_naffect3, reg_turnover3, reg_will3,
+                     type = "latex",
+                     header = FALSE,
+                     label = "tab:bene-s1",
+                     title = "OLS regression to test the moderating effect of contact with beneficiaries (Study 1)",
+                     dep.var.labels.include = TRUE,
+                     dep.var.labels = c("Positive affect",
+                                        "Negative affect",
+                                        "Turnover intent.",
+                                        "Will. rec. job"),
+                     dep.var.caption = "",
+                     star.cutoffs = c(.05, .01, .001),
+                     covariate.labels = c("Treat. B (Active control)",
+                                          "Treat. C (Prosocial impact)",
+                                          "Treat. D (Societal impact)",
+                                          "Contact with beneficiaries",
+                                          "Treat. B * beneficiaries",
+                                          "Treat. C * beneficiaries",
+                                          "Treat. D * beneficiaries"),
+                     keep.stat = c("n", "rsq", "adj.rsq", "f"),
+                     notes = c("Standard errors in parentheses;", 
+                                "Turnover intent. = Turnover intention;", 
+                                "Will. rec. job = Willingness to recommend job"),
+                     notes.append = TRUE,
+                     report = "vc*s",
+                     float = TRUE,
+                     font.size = "small",
+                     align = TRUE,
+                     table.placement = "!htbp")
+```
+
+
+
+\clearpage
+
+#### Study 2
+
+Table \@ref(tab:bene-s2) shows the test results for contact with beneficiaries' moderating influence on the treatments’ effects on the dependent variables. We tested the perceptive, as well as the objective, measure of contact with beneficiaries and found no significant interaction for the two main treatments, i.e. reflection on prosocial impact and societal impact. However, a single significant negative interaction between the general reflection task and the objective measure of contact with beneficiaries emerged, which indicates that the treatment’s influence on positive affect is smaller, the less contact one has with beneficiaries.
+
+
+#### Study 3
+
+Table \@ref(tab:bene-s3) shows the test results for contact with beneficiaries' moderating influence on the treatments' effects on the dependent variables. Similar to Study 2, we found no significant interaction for the two main treatments, i.e. reflection on prosocial impact and societal impact.
+
+\newgeometry{top = 1.5cm, bottom = 2cm, left = 1.5cm, right = 1.5cm}
+
+```{r reg-print-s2, include = TRUE, results="asis"}
+stargazer::stargazer(reg_paffect3_s2, reg_paffect4_s2,
+                     reg_naffect3_s2, reg_naffect4_s2,
+                     reg_turnover3_s2, reg_turnover4_s2,
+                     reg_will3_s2, reg_will4_s2,
+                     type = "latex",
+                     header = FALSE,
+                     label = "tab:bene-s2",
+                     title = "OLS regression to test the moderating effect of contact with beneficiaries (Study 2)",
+                     dep.var.labels.include = TRUE,
+                     dep.var.labels = c("Positive affect",
+                                        "Negative affect",
+                                        "Turnover intent.",
+                                        "Will. rec. job"),
+                     dep.var.caption = "",
+                     star.cutoffs = c(.05, .01, .001),
+                     covariate.labels = c("Treat. B (Active control)",
+                                          "Treat. C (Prosocial impact)",
+                                          "Treat. D (Societal impact)",
+                                          "Contact with beneficiaries",
+                                          "Treat. B * beneficiaries",
+                                          "Treat. C * beneficiaries",
+                                          "Treat. D * beneficiaries",
+                                          "Contact with benef. (object.)",
+                                          "Treat. B * benef. (object.)",
+                                          "Treat. C * benef. (object.)",
+                                          "Treat. D * benef. (object.)"),
+                     keep.stat = c("n", "rsq", "adj.rsq", "f"),
+                     notes = "Standard errors in parentheses",
+                     notes.append = TRUE,
+                     report = "vc*s",
+                     float = TRUE,
+                     font.size = "footnotesize",
+                     align = TRUE,
+                     table.placement = "!htbp",
+                     float.env = "sidewaystable",
+                     column.sep.width = "0pt")
+```
+
+\restoregeometry
+
+
+
+
+
+
+\newgeometry{top = 1.5cm, bottom = 2cm, left = 1.5cm, right = 1.5cm}
+
+```{r reg-print-s3, include = TRUE, results="asis"}
+stargazer::stargazer(reg_paffect3_s3, reg_paffect4_s3,
+                     reg_naffect3_s3, reg_naffect4_s3,
+                     reg_turnover3_s3, reg_turnover4_s3,
+                     reg_will3_s3, reg_will4_s3,
+                     type = "latex",
+                     header = FALSE,
+                     label = "tab:bene-s3",
+                     title = "OLS regression to test the moderating effect of contact with beneficiaries (Study 3)",
+                     dep.var.labels.include = TRUE,
+                     dep.var.labels = c("Positive affect",
+                                        "Negative affect",
+                                        "Turnover intent.",
+                                        "Will. rec. job"),
+                     dep.var.caption = "",
+                     star.cutoffs = c(.05, .01, .001),
+                     covariate.labels = c("Treat. B (Active control)",
+                                          "Treat. C (Prosocial impact)",
+                                          "Treat. D (Societal impact)",
+                                          "Contact with beneficiaries",
+                                          "Treat. B * beneficiaries",
+                                          "Treat. C * beneficiaries",
+                                          "Treat. D * beneficiaries",
+                                          "Contact with benef. (object.)",
+                                          "Treat. B * benef. (object.)",
+                                          "Treat. C * benef. (object.)",
+                                          "Treat. D * benef. (object.)"),
+                     keep.stat = c("n", "rsq", "adj.rsq", "f"),
+                     notes = "Standard errors in parentheses",
+                     notes.append = TRUE,
+                     report = "vc*s",
+                     float = TRUE,
+                     font.size = "footnotesize",
+                     align = TRUE,
+                     table.placement = "!htbp",
+                     float.env = "sidewaystable",
+                     column.sep.width = "0pt")
+```
+
+
+\restoregeometry
+
+
+
+
+
+
