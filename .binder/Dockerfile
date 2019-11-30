@@ -1,4 +1,4 @@
-FROM rocker:binder/latest
+FROM rocker:verse
 LABEL maintainer='Dominik Vogel'
 USER root
 COPY . ${HOME}
