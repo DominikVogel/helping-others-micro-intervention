@@ -1,5 +1,10 @@
-# Meta-analytic Bayes factor ##################################################
-# Positive Affect =============================================================
+###############################################################################
+################ Bayes Factors for Figure 5 ###################################
+###############################################################################
+
+
+# 1. Meta-analytic Bayes factor ###############################################
+# 1.1 Positive Affect =========================================================
 
 # Prosocial vs. Passive control
 bf_paffect_psi_passive_meta <- func_meta_bf(df1 = pairwise_paffect, 
@@ -34,7 +39,7 @@ bf_paffect_si_active_meta <- func_meta_bf(df1 = pairwise_paffect,
                             treat = "societal")
 
 
-# Negative Affect =============================================================
+# 1.2 Negative Affect =========================================================
 # Prosocial vs. Passive control
 bf_naffect_psi_passive_meta <- func_meta_bf(df1 = pairwise_naffect, 
                             df2 = pairwise_naffect_s2,
@@ -67,7 +72,7 @@ bf_naffect_si_active_meta <- func_meta_bf(df1 = pairwise_naffect,
                             control = "active", 
                             treat = "societal")
 
-# Turnover intention ==========================================================
+# 1.3 Turnover intention ======================================================
 # Prosocial vs. Passive control
 bf_turnover_psi_passive_meta <- func_meta_bf(df1 = pairwise_turnover, 
                              df2 = pairwise_turnover_s2,
@@ -101,7 +106,7 @@ bf_turnover_si_active_meta <- func_meta_bf(df1 = pairwise_turnover,
                              treat = "societal")
 
 
-# Willingness to recommend job ================================================
+# 1.4 Willingness to recommend job ============================================
 # Prosocial vs. Passive control
 bf_will_psi_passive_meta <- func_meta_bf(df1 = pairwise_will, 
                          df2 = pairwise_will_s2,
@@ -137,9 +142,9 @@ bf_will_si_active_meta <- func_meta_bf(df1 = pairwise_will,
 
 
 
-# Bayes factor independent t-test #############################################
+# 2. Bayes factor independent t-test ##########################################
 
-# Study 1 =====================================================================
+# 2.1 Study 1 =================================================================
 
 # Positive Affect
 bf_paffect_psi_passive <- func_ttest_bf(df_merge1$paffect, 
@@ -199,7 +204,7 @@ bf_will_si_active <- func_ttest_bf(df_merge2$willingnessjobrec,
                                       df_merge4$willingnessjobrec,
                                       dv = "will")
 
-# Study 2 =====================================================================
+# 2.2 Study 2 =================================================================
 
 # Positive Affect
 bf_paffect_psi_passive_s2 <- func_ttest_bf(df_merge1_s2$paffect, 
@@ -260,7 +265,7 @@ bf_will_si_active_s2 <- func_ttest_bf(df_merge2_s2$willingnessjobrec,
                                    dv = "will")
 
 
-# Study 3 =====================================================================
+# 2.3 Study 3 =================================================================
 
 # Positive Affect
 bf_paffect_psi_passive_s3 <- func_ttest_bf(df_merge1_s3$paffect_post, 
@@ -321,7 +326,7 @@ bf_will_si_active_s3 <- func_ttest_bf(df_merge2_s3$willingnessjobrec_post,
                                       dv = "will")
 
 
-# Bayes factor paired t-test ##################################################
+# 3. Bayes factor paired t-test ###############################################
 # Positive Affect
 bf_paired_paffect_psi <- func_ttest_paired_bf(df_merge3_s3$paffect_pre, 
                                     df_merge3_s3$paffect_post,

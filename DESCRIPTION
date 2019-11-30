@@ -1,0 +1,47 @@
+Type: Compendium
+Package: The Effects of Making Public Service Employees
+    Aware of Their Prosocial and Societal Impact
+Title: What the Package Does (One Line, Title Case)
+Version: 0.9
+Authors@R: 
+    c(person(given = "Dominik",
+           family = "Vogel",
+           role = c("aut", "cre"),
+           email = "dominik.vogel-2@uni-hamburg.de",
+           comment = c(ORCID = "0000-0002-0145-7956")),
+      person(given = "Jurgen",
+           family = "Willems",
+           role = c("aut"),
+           email = "jurgen.willems@wu.ac.at",
+           comment = c(ORCID = "0000-0002-4439-3948"))
+           )
+Description: Vogel, D., & Willems, J. The Effects of Making
+    Public Service Employees Aware of Their Prosocial and Societal Impact.
+    Journal of Public Administration Research and Theory.
+License: MIT
+Depends: 
+    apaTables,
+    BayesFactor,
+    broman,
+    cowplot (<= 0.9.4),
+    dplyr,
+    effsize,
+    ez,
+    forestplot,
+    ggsignif,
+    here,
+    knitr,
+    MBESS,
+    nlme,
+    psych,
+    rlang,
+    rmarkdown,
+    sjstats,
+    stargazer,
+    stats,
+    tibble,
+    tidyverse,
+    weights,
+    xtable
+Encoding: UTF-8
+LazyData: true

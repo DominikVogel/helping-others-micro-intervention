@@ -1,7 +1,10 @@
-# Functions
+###############################################################################
+################### Custom functions ##########################################
+###############################################################################
 
+# 1. Data management ##########################################################
 
-# Build mean indices from multiple variables
+# 1.1 Build mean indices from multiple variables ==============================
 mean_index <- function (df, name, vars) {
   M1 <- dplyr::select(df, vars)
   M2 <- rowMeans(M1, na.rm = TRUE)
@@ -11,22 +14,34 @@ mean_index <- function (df, name, vars) {
   return(df)
 }
 
-# Rename variables from limesurvey
+
+# 1.2 Fix variable names from LimeSurvey (lime_names) =========================
 lime_names <- function (df) {
   df <- stats::setNames(df, gsub(".*\\[(.+)\\]", "\\1", names(df)))
   return(df)
 }
 
 
+# 1.3 Print all columns of a tibble (tibble_print_vars) =======================
+tibble_print_vars <- function (tibble) 
+{
+  default <- getOption("tibble.width")
+  options(tibble.width = Inf)
+  print(tibble)
+  options(tibble.width = default)
+}
 
+# 2. Stats ####################################################################
 
-# Calculate standard error
+# 2.1 Calculate standard error (se_func) ======================================
 se_func <- function(var) {
   sd <- sd(var)
   n <- length(var)
   se <- sd / sqrt(n)
   return(se)
 }
+
+# 2.2. Calculate confidence interval (lower_ci_func, upper_ci_func) ===========
 
 # Calculate confidence interval (lower bound)
 lower_ci_func <- function(var) {
@@ -49,7 +64,7 @@ upper_ci_func <- function(var) {
 }
 
 
-# Calculate confidence interval (lower bound)
+# 2.3. Adjusted confidence intervals for within-design ========================
 # Adjustment procedure by Cousineau-Morey
 # R adotion by Baguley, T. (2012).
 #    Calculating and graphing within-subject confidence intervals for ANOVA. 
@@ -110,7 +125,361 @@ lm.ci <- function(data.frame, conf.level = 0.95, difference = FALSE) {
 }
 
 
-# format p values in APA format
+
+# 2.4 Meta-analytic Bayes factor (func_meta_bf) -------------------------------
+func_meta_bf <- function(df1 = pairwise_paffect, 
+                         df2 = pairwise_paffect_s2,
+                         df3 = pairwise_paffect_post_s3,
+                         dv = "paffect", 
+                         control = "passive", treat = "prosocial") {
+  
+  # Get group number for control group (1=passive, 2=active)
+  cgroup <- ifelse(control == "passive", 1, 
+                   ifelse(control == "active", 2, 0))
+  
+  # Get group number for contorl group (3=prosocial, 4=societal)
+  tgroup <- ifelse(treat == "prosocial", 3, 
+                   ifelse(treat == "societal", 4, 0))
+  
+  # Get line number for t value in pairwise df
+  line <- ifelse(cgroup == 1 & tgroup == 3, 1,
+                 ifelse(cgroup == 1 & tgroup == 4, 2,
+                        ifelse(cgroup == 2 & tgroup == 3, 3,
+                               ifelse(cgroup == 2 & tgroup == 4, 4,
+                                      0))))
+  
+  # For one-sided tests: get boundaries
+  alternative1 = ifelse(dv == "paffect", 0,
+                        ifelse(dv == "naffect", -Inf,
+                               ifelse(dv == "turnover", -Inf,
+                                      ifelse(dv == "will", 0, 
+                                             -Inf))))
+  alternative2 = ifelse(dv == "paffect", Inf,
+                        ifelse(dv == "naffect", 0,
+                               ifelse(dv == "turnover", 0,
+                                      ifelse(dv == "will", Inf, 
+                                             Inf))))
+  
+  # Get t values from pairwise df
+  t <- c(df1$t[line], df2$t[line], df3$t[line])
+  
+  # Get n from obs df
+  n1 <- c(obs$final[cgroup+1], obs_s2$final[cgroup+1], obs_s3$final[cgroup+1])
+  n2 <- c(obs$final[tgroup+1], obs_s2$final[tgroup+1], obs_s3$final[tgroup+1])
+  
+  # Calculate meta-analytic Bayes factor
+  bf <- BayesFactor::meta.ttestBF(t = t, n1 = n1, n2 = n2,
+                                  nullInterval= c(alternative1, alternative2)
+  )
+  
+  bf2 <- BayesFactor::extractBF(bf)
+  bf2 <- bf2[1,1]
+  bf2 <- broman::myround(bf2, 2)
+  return(bf2)
+}
+
+
+
+# 2.5 Bayes Factor independent t-test (func_ttest_bf) -------------------------
+func_ttest_bf <- function(control = df_merge1$paffect, 
+                          treat = df_merge3$paffect,
+                          dv = "paffect") {
+  
+  # For one-sided tests: get boundaries
+  alternative1 = ifelse(dv == "paffect", 0,
+                        ifelse(dv == "naffect", -Inf,
+                               ifelse(dv == "turnover", -Inf,
+                                      ifelse(dv == "will", 0, 
+                                             -Inf))))
+  
+  alternative2 = ifelse(dv == "paffect", Inf,
+                        ifelse(dv == "naffect", 0,
+                               ifelse(dv == "turnover", 0,
+                                      ifelse(dv == "will", Inf, 
+                                             Inf))))
+  
+  # Calculate  Bayes factor
+  bf <- BayesFactor::ttestBF(treat, control,
+                             nullInterval = c(alternative1, alternative2),
+                             paired = FALSE)
+  
+  bf2 <- BayesFactor::extractBF(bf)
+  bf2 <- bf2[1,1]
+  bf2 <- broman::myround(bf2, 2)
+  return(bf2)
+}
+
+
+# 2.6 Bayes Factor paired t-test (func_ttest_paired_bf) -----------------------
+func_ttest_paired_bf <- function(pre = df_merge1_s3$paffect_pre, 
+                                 post = df_merge1_s3$paffect_post,
+                                 dv = "paffect") {
+  
+  # For one-sided tests: get boundaries
+  alternative1 = ifelse(dv == "paffect", 0,
+                        ifelse(dv == "naffect", -Inf,
+                               ifelse(dv == "turnover", -Inf,
+                                      ifelse(dv == "will", 0, 
+                                             -Inf))))
+  
+  alternative2 = ifelse(dv == "paffect", Inf,
+                        ifelse(dv == "naffect", 0,
+                               ifelse(dv == "turnover", 0,
+                                      ifelse(dv == "will", Inf, 
+                                             Inf))))
+  
+  # Calculate  Bayes factor
+  bf <- BayesFactor::ttestBF(post, pre,
+                             nullInterval = c(alternative1, alternative2),
+                             paired = TRUE)
+  
+  bf2 <- BayesFactor::extractBF(bf)
+  bf2 <- bf2[1,1]
+  bf2 <- broman::myround(bf2, 2)
+  return(bf2)
+}
+
+
+
+# 2.7 Effect sizes for meta-analysis (func_meta_effsize) ######################
+func_meta_effsize <- function(pairwise1 = pairwise_paffect,
+                              pairwise2 = pairwise_paffect_s2,
+                              pairwise3 = pairwise_paffect_post_s3,
+                              control = "passive",
+                              treat = "prosocial") {
+  # Get group number for control group (1=passive, 2=active)
+  cgroup <- ifelse(control == "passive", 1, 
+                   ifelse(control == "active", 2, 0))
+  
+  # Get group number for contorl group (3=prosocial, 4=societal)
+  tgroup <- ifelse(treat == "prosocial", 3, 
+                   ifelse(treat == "societal", 4, 0))
+  
+  # Get line number for t value in pairwise df
+  line <- ifelse(cgroup == 1 & tgroup == 3, 1,
+                 ifelse(cgroup == 1 & tgroup == 4, 2,
+                        ifelse(cgroup == 2 & tgroup == 3, 3,
+                               ifelse(cgroup == 2 & tgroup == 4, 4,
+                                      0))))
+  
+  d <- as.numeric(pairwise1$eff_size_d[line])
+  n1 <- as.numeric(obs$final[cgroup+1])
+  n2 <- as.numeric(obs$final[tgroup+1])
+  meta11 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2)) 
+  meta21 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
+  
+  d <- as.numeric(pairwise2$eff_size_d[line])
+  n1 <- as.numeric(obs_s2$final[cgroup+1])
+  n2 <- as.numeric(obs_s2$final[tgroup+1])
+  meta12 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2)) 
+  meta22 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
+  
+  d <- as.numeric(pairwise3$eff_size_d[line])
+  n1 <- as.numeric(obs_s3$final[cgroup+1])
+  n2 <- as.numeric(obs_s3$final[tgroup+1])
+  meta13 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2))
+  meta23 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
+  
+  meta <- (meta11 + meta12 + meta13) / (meta21 + meta22 + meta23)
+  return(meta)
+}
+
+
+func_meta_upper <- function(pairwise1 = pairwise_paffect,
+                            pairwise2 = pairwise_paffect_s2,
+                            pairwise3 = pairwise_paffect_post_s3,
+                            control = "passive",
+                            treat = "prosocial") {
+  # Get group number for control group (1=passive, 2=active)
+  cgroup <- ifelse(control == "passive", 1, 
+                   ifelse(control == "active", 2, 0))
+  
+  # Get group number for contorl group (3=prosocial, 4=societal)
+  tgroup <- ifelse(treat == "prosocial", 3, 
+                   ifelse(treat == "societal", 4, 0))
+  
+  # Get line number for t value in pairwise df
+  line <- ifelse(cgroup == 1 & tgroup == 3, 1,
+                 ifelse(cgroup == 1 & tgroup == 4, 2,
+                        ifelse(cgroup == 2 & tgroup == 3, 3,
+                               ifelse(cgroup == 2 & tgroup == 4, 4,
+                                      0))))
+  
+  d <- as.numeric(pairwise1$eff_size_d[line])
+  n1 <- as.numeric(obs$final[cgroup+1])
+  n2 <- as.numeric(obs$final[tgroup+1])
+  meta11 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2)) 
+  meta21 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
+  
+  d <- as.numeric(pairwise2$eff_size_d[line])
+  n1 <- as.numeric(obs_s2$final[cgroup+1])
+  n2 <- as.numeric(obs_s2$final[tgroup+1])
+  meta12 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2)) 
+  meta22 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
+  
+  d <- as.numeric(pairwise3$eff_size_d[line])
+  n1 <- as.numeric(obs_s3$final[cgroup+1])
+  n2 <- as.numeric(obs_s3$final[tgroup+1])
+  meta13 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2)) 
+  meta23 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
+  
+  meta1 <- (meta11 + meta12 + meta13)
+  meta2 <- (meta21 + meta22 + meta23)
+  meta <- meta1 / meta2
+  
+  upper <- meta + 1.96 * (sqrt(1 /meta2))
+  return(upper)
+}
+
+func_meta_lower <- function(pairwise1 = pairwise_paffect,
+                            pairwise2 = pairwise_paffect_s2,
+                            pairwise3 = pairwise_paffect_post_s3,
+                            control = "passive",
+                            treat = "prosocial") {
+  # Get group number for control group (1=passive, 2=active)
+  cgroup <- ifelse(control == "passive", 1, 
+                   ifelse(control == "active", 2, 0))
+  
+  # Get group number for contorl group (3=prosocial, 4=societal)
+  tgroup <- ifelse(treat == "prosocial", 3, 
+                   ifelse(treat == "societal", 4, 0))
+  
+  # Get line number for t value in pairwise df
+  line <- ifelse(cgroup == 1 & tgroup == 3, 1,
+                 ifelse(cgroup == 1 & tgroup == 4, 2,
+                        ifelse(cgroup == 2 & tgroup == 3, 3,
+                               ifelse(cgroup == 2 & tgroup == 4, 4,
+                                      0))))
+  
+  d <- as.numeric(pairwise1$eff_size_d[line])
+  n1 <- as.numeric(obs$final[cgroup+1])
+  n2 <- as.numeric(obs$final[tgroup+1])
+  meta11 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2))
+  meta21 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
+  
+  d <- as.numeric(pairwise2$eff_size_d[line])
+  n1 <- as.numeric(obs_s2$final[cgroup+1])
+  n2 <- as.numeric(obs_s2$final[tgroup+1])
+  meta12 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2)) 
+  meta22 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
+  
+  d <- as.numeric(pairwise3$eff_size_d[line])
+  n1 <- as.numeric(obs_s3$final[cgroup+1])
+  n2 <- as.numeric(obs_s3$final[tgroup+1])
+  meta13 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2)) 
+  meta23 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
+  
+  meta1 <- (meta11 + meta12 + meta13)
+  meta2 <- (meta21 + meta22 + meta23)
+  meta <- meta1 / meta2
+  
+  lower <- meta - 1.96 * (sqrt(1 /meta2))
+  return(lower)
+}
+
+
+
+
+# 2.8 CIs for effet sizes #####################################################
+func_upper_ci_t <- function(pairwise = pairwise_paffect,
+                            obs = obs,
+                            control = "passive",
+                            treat = "prosocial") {
+  
+  # Get group number for control group (1=passive, 2=active)
+  cgroup <- ifelse(control == "passive", 1, 
+                   ifelse(control == "active", 2, 0))
+  
+  # Get group number for contorl group (3=prosocial, 4=societal)
+  tgroup <- ifelse(treat == "prosocial", 3, 
+                   ifelse(treat == "societal", 4, 0))
+  
+  # Get line number for t value in pairwise df
+  line <- ifelse(cgroup == 1 & tgroup == 3, 1,
+                 ifelse(cgroup == 1 & tgroup == 4, 2,
+                        ifelse(cgroup == 2 & tgroup == 3, 3,
+                               ifelse(cgroup == 2 & tgroup == 4, 4,
+                                      0))))
+  
+  t <- pairwise$t[line]
+  n1 <- as.numeric(obs$final[cgroup+1])
+  n2 <- as.numeric(obs$final[tgroup+1]) 
+  
+  upper <- MBESS::ci.smd(ncp=t, n.1=n1, n.2=n2, conf.level=0.95)
+  return(upper$Upper.Conf.Limit.smd)
+}
+
+
+func_lower_ci_t <- function(pairwise = pairwise_paffect,
+                            obs = obs,
+                            control = "passive",
+                            treat = "prosocial") {
+  
+  # Get group number for control group (1=passive, 2=active)
+  cgroup <- ifelse(control == "passive", 1, 
+                   ifelse(control == "active", 2, 0))
+  
+  # Get group number for contorl group (3=prosocial, 4=societal)
+  tgroup <- ifelse(treat == "prosocial", 3, 
+                   ifelse(treat == "societal", 4, 0))
+  
+  # Get line number for t value in pairwise df
+  line <- ifelse(cgroup == 1 & tgroup == 3, 1,
+                 ifelse(cgroup == 1 & tgroup == 4, 2,
+                        ifelse(cgroup == 2 & tgroup == 3, 3,
+                               ifelse(cgroup == 2 & tgroup == 4, 4,
+                                      0))))
+  
+  t <- pairwise$t[line]
+  n1 <- as.numeric(obs$final[cgroup+1])
+  n2 <- as.numeric(obs$final[tgroup+1]) 
+  
+  lower <- MBESS::ci.smd(ncp=t, n.1=n1, n.2=n2, conf.level=0.95)
+  return(lower$Lower.Conf.Limit.smd)
+}
+
+
+
+
+
+func_upper_ci_t_paired <- function(pairwise = pairwise_paffect_time_s3,
+                                   treat = "prosocial") {
+  # Get group number for contorl group (3=prosocial, 4=societal)
+  tgroup <- ifelse(treat == "prosocial", 3, 
+                   ifelse(treat == "societal", 4, 0))
+  
+  t <- pairwise$t[tgroup]
+  n1 <- as.numeric(obs_s3$final[tgroup+1])
+  
+  # Code from https://github.com/Lakens/perfect-t-test/blob/master/Perfect_dependent_t-test.Rmd
+  nct_limits <- MBESS::conf.limits.nct(t.value = t, df=n1-1, conf.level = 0.95)
+  ci_u_d_z <- nct_limits$Upper.Limit/sqrt(n1) #Not sure about this formula
+  
+  return(ci_u_d_z)
+}
+
+func_lower_ci_t_paired <- function(pairwise = pairwise_paffect_time_s3,
+                                   treat = "prosocial") {
+  # Get group number for contorl group (3=prosocial, 4=societal)
+  tgroup <- ifelse(treat == "prosocial", 3, 
+                   ifelse(treat == "societal", 4, 0))
+  
+  t <- pairwise$t[tgroup]
+  n1 <- as.numeric(obs_s3$final[tgroup+1])
+  
+  # Code from https://github.com/Lakens/perfect-t-test/blob/master/Perfect_dependent_t-test.Rmd
+  nct_limits <- MBESS::conf.limits.nct(t.value = t, df=n1-1, conf.level = 0.95)
+  ci_l_d_z <- nct_limits$Lower.Limit/sqrt(n1) #Not sure about this formula, but gives same results as Wuensch's files
+  
+  return(ci_l_d_z)
+}
+
+
+
+
+# 3. Format statistical results ###############################################
+
+# 3.1. format p values in APA format (pformat) ================================
 pformat <- function(p) {
   paste0("p ",
          ifelse(p >= 0.001,
@@ -119,7 +488,7 @@ pformat <- function(p) {
                 paste0("< .001")))
 }
 
-# Chi2 results in APA format
+# 3.2 Chi2 results in APA format (chi_result) =================================
 chi_result <- function (x, y) 
 {
   suppressWarnings(chi_result <- stats::chisq.test(x, y))
@@ -136,7 +505,7 @@ chi_result <- function (x, y)
   return(result)
 }
 
-# ANOVA result in APA format
+# 3.3. ANOVA result in APA format (aov_results) ===============================
 aov_result <- function (aov_object) {
   anova_result <- summary(aov_object)
   p <- pformat(anova_result[[1]][["Pr(>F)"]][1])
@@ -148,19 +517,19 @@ aov_result <- function (aov_object) {
 }
 
 
-# mixed.effects ANOVA results in APA format
+# 3.4 Mixed-effects ANOVA results in APA format (rmaov_results) ===============
 rmaov_results <- function(rmezaov, row) {
-  paste0("F(", round(rmezaov$ANOVA$DFn[row],2), ",", rmezaov$ANOVA$DFd[row], ") = ", myround2(rmezaov$ANOVA$F[row]), ", ", pformat(rmezaov$ANOVA$p[row]))
+  paste0("F(", 
+         round(rmezaov$ANOVA$DFn[row],2),
+         ",", 
+         rmezaov$ANOVA$DFd[row],
+         ") = ", 
+         myround2(rmezaov$ANOVA$F[row]),
+         ", ", 
+         pformat(rmezaov$ANOVA$p[row]))
 }
 
-# Print all columns of a tibble
-tibble_print_vars <- function (tibble) 
-{
-  default <- getOption("tibble.width")
-  options(tibble.width = Inf)
-  print(tibble)
-  options(tibble.width = default)
-}
+
 
 # Clear results table (group comparison)
 func_empty_resultstable_postonly <- function() {
@@ -292,12 +661,12 @@ time_plot_func <- function(var_pre, var_post, ylabel,
   
   if (adjust == "no") {
     new1 <- df_merge_s3 %>% 
-      select(WorkerId, treatment, !!sym(var_pre), !!sym(var_post)) %>% 
-      gather(-WorkerId, -treatment, 
+      select(id, treatment, !!sym(var_pre), !!sym(var_post)) %>% 
+      gather(-id, -treatment, 
              key = "time", 
              value = "var", 
              factor_key = TRUE) %>% 
-      arrange(WorkerId)
+      arrange(id)
     
     df_merge_sum_s3 <- new1 %>% 
       select(treatment, time, var) %>%
@@ -314,12 +683,12 @@ time_plot_func <- function(var_pre, var_post, ylabel,
   # Adjustment procedure by Cousineau-Morey
   if (adjust == "cm") {
     new1 <- df_merge_s3 %>% 
-      select(WorkerId, treatment, !!sym(var_pre), !!sym(var_post)) %>% 
-      gather(-WorkerId, -treatment, 
+      select(id, treatment, !!sym(var_pre), !!sym(var_post)) %>% 
+      gather(-id, -treatment, 
              key = "time", 
              value = "var", 
              factor_key = TRUE) %>% 
-      arrange(WorkerId)
+      arrange(id)
     
     df_merge_sum_s3 <- new1 %>% 
       select(treatment, time, var) %>%
@@ -362,12 +731,12 @@ time_plot_func <- function(var_pre, var_post, ylabel,
   #loftus-masson within-subject CIs
   if (adjust == "lm") {
     new1 <- df_merge_s3 %>% 
-      select(WorkerId, treatment, !!sym(var_pre), !!sym(var_post)) %>% 
-      gather(-WorkerId, -treatment, 
+      select(id, treatment, !!sym(var_pre), !!sym(var_post)) %>% 
+      gather(-id, -treatment, 
              key = "time", 
              value = "var", 
              factor_key = TRUE) %>% 
-      arrange(WorkerId)
+      arrange(id)
     
     df_merge_sum_s3 <- new1 %>% 
       select(treatment, time, var) %>%
@@ -473,369 +842,21 @@ time_plot_func <- function(var_pre, var_post, ylabel,
 }
 
 
-# Rounded means (for results table) -------------------------------------------
+# 3.5 Rounded means (for results table) ---------------------------------------
 func_round_mean <- function(x) {
   broman::myround(mean(x, na.rm = TRUE), digits = 2)
 }
 
-# Rounded sds (for results table) ---------------------------------------------
+# 3.6 Rounded sds (for results table) -----------------------------------------
 func_round_sd <- function(x) {
   broman::myround(sd(x, na.rm = TRUE), digits = 2)
 }
 
 
 
-# Meta-analytic bayes factor --------------------------------------------------
-func_meta_bf <- function(df1 = pairwise_paffect, 
-                         df2 = pairwise_paffect_s2,
-                         df3 = pairwise_paffect_post_s3,
-                         dv = "paffect", 
-                         control = "passive", treat = "prosocial") {
-  
-  # Get group number for control group (1=passive, 2=active)
-  cgroup <- ifelse(control == "passive", 1, 
-                   ifelse(control == "active", 2, 0))
-  
-  # Get group number for contorl group (3=prosocial, 4=societal)
-  tgroup <- ifelse(treat == "prosocial", 3, 
-                   ifelse(treat == "societal", 4, 0))
-  
-  # Get line number for t value in pairwise df
-  line <- ifelse(cgroup == 1 & tgroup == 3, 1,
-                 ifelse(cgroup == 1 & tgroup == 4, 2,
-                        ifelse(cgroup == 2 & tgroup == 3, 3,
-                               ifelse(cgroup == 2 & tgroup == 4, 4,
-                                      0))))
-  
-  # For one-sided tests: get boundaries
-  alternative1 = ifelse(dv == "paffect", 0,
-                        ifelse(dv == "naffect", -Inf,
-                               ifelse(dv == "turnover", -Inf,
-                                      ifelse(dv == "will", 0, 
-                                             -Inf))))
-  alternative2 = ifelse(dv == "paffect", Inf,
-                        ifelse(dv == "naffect", 0,
-                               ifelse(dv == "turnover", 0,
-                                      ifelse(dv == "will", Inf, 
-                                             Inf))))
-  
-  # Get t values from pairwise df
-  t <- c(df1$t[line], df2$t[line], df3$t[line])
-  
-  # Get n from obs df
-  n1 <- c(obs$final[cgroup+1], obs_s2$final[cgroup+1], obs_s3$final[cgroup+1])
-  n2 <- c(obs$final[tgroup+1], obs_s2$final[tgroup+1], obs_s3$final[tgroup+1])
-  
-  # Calculate meta-analytic Bayes factor
-  bf <- BayesFactor::meta.ttestBF(t = t, n1 = n1, n2 = n2,
-                                  nullInterval= c(alternative1, alternative2)
-  )
-  
-  bf2 <- BayesFactor::extractBF(bf)
-  bf2 <- bf2[1,1]
-  bf2 <- broman::myround(bf2, 2)
-  return(bf2)
-}
 
 
-
-# Bayes Factor independent t-test ---------------------------------------------
-func_ttest_bf <- function(control = df_merge1$paffect, 
-                          treat = df_merge3$paffect,
-                          dv = "paffect") {
-  
-  # For one-sided tests: get boundaries
-  alternative1 = ifelse(dv == "paffect", 0,
-                        ifelse(dv == "naffect", -Inf,
-                               ifelse(dv == "turnover", -Inf,
-                                      ifelse(dv == "will", 0, 
-                                             -Inf))))
-  
-  alternative2 = ifelse(dv == "paffect", Inf,
-                        ifelse(dv == "naffect", 0,
-                               ifelse(dv == "turnover", 0,
-                                      ifelse(dv == "will", Inf, 
-                                             Inf))))
-  
-  # Calculate  Bayes factor
-  bf <- BayesFactor::ttestBF(treat, control,
-                             nullInterval = c(alternative1, alternative2),
-                             paired = FALSE)
-  
-  bf2 <- BayesFactor::extractBF(bf)
-  bf2 <- bf2[1,1]
-  bf2 <- broman::myround(bf2, 2)
-  return(bf2)
-}
-
-
-# Bayes Factor paired t-test --------------------------------------------------
-func_ttest_paired_bf <- function(pre = df_merge1_s3$paffect_pre, 
-                          post = df_merge1_s3$paffect_post,
-                          dv = "paffect") {
-  
-  # For one-sided tests: get boundaries
-  alternative1 = ifelse(dv == "paffect", 0,
-                        ifelse(dv == "naffect", -Inf,
-                               ifelse(dv == "turnover", -Inf,
-                                      ifelse(dv == "will", 0, 
-                                             -Inf))))
-  
-  alternative2 = ifelse(dv == "paffect", Inf,
-                        ifelse(dv == "naffect", 0,
-                               ifelse(dv == "turnover", 0,
-                                      ifelse(dv == "will", Inf, 
-                                             Inf))))
-  
-  # Calculate  Bayes factor
-  bf <- BayesFactor::ttestBF(post, pre,
-                             nullInterval = c(alternative1, alternative2),
-                             paired = TRUE)
-
-  bf2 <- BayesFactor::extractBF(bf)
-  bf2 <- bf2[1,1]
-  bf2 <- broman::myround(bf2, 2)
-  return(bf2)
-}
-
-
-
-# Meta effect size ############################################################
-func_meta_effsize <- function(pairwise1 = pairwise_paffect,
-                              pairwise2 = pairwise_paffect_s2,
-                              pairwise3 = pairwise_paffect_post_s3,
-                              control = "passive",
-                              treat = "prosocial") {
-  # Get group number for control group (1=passive, 2=active)
-  cgroup <- ifelse(control == "passive", 1, 
-                   ifelse(control == "active", 2, 0))
-  
-  # Get group number for contorl group (3=prosocial, 4=societal)
-  tgroup <- ifelse(treat == "prosocial", 3, 
-                   ifelse(treat == "societal", 4, 0))
-  
-  # Get line number for t value in pairwise df
-  line <- ifelse(cgroup == 1 & tgroup == 3, 1,
-                 ifelse(cgroup == 1 & tgroup == 4, 2,
-                        ifelse(cgroup == 2 & tgroup == 3, 3,
-                               ifelse(cgroup == 2 & tgroup == 4, 4,
-                                      0))))
-  
-  d <- as.numeric(pairwise1$eff_size_d[line])
-  n1 <- as.numeric(obs$final[cgroup+1])
-  n2 <- as.numeric(obs$final[tgroup+1])
-  meta11 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2)) 
-  meta21 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
-  
-  d <- as.numeric(pairwise2$eff_size_d[line])
-  n1 <- as.numeric(obs_s2$final[cgroup+1])
-  n2 <- as.numeric(obs_s2$final[tgroup+1])
-  meta12 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2)) 
-  meta22 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
-  
-  d <- as.numeric(pairwise3$eff_size_d[line])
-  n1 <- as.numeric(obs_s3$final[cgroup+1])
-  n2 <- as.numeric(obs_s3$final[tgroup+1])
-  meta13 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2))
-  meta23 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
-  
-  meta <- (meta11 + meta12 + meta13) / (meta21 + meta22 + meta23)
-  return(meta)
-}
-
-
-func_meta_upper <- function(pairwise1 = pairwise_paffect,
-                              pairwise2 = pairwise_paffect_s2,
-                              pairwise3 = pairwise_paffect_post_s3,
-                              control = "passive",
-                              treat = "prosocial") {
-  # Get group number for control group (1=passive, 2=active)
-  cgroup <- ifelse(control == "passive", 1, 
-                   ifelse(control == "active", 2, 0))
-  
-  # Get group number for contorl group (3=prosocial, 4=societal)
-  tgroup <- ifelse(treat == "prosocial", 3, 
-                   ifelse(treat == "societal", 4, 0))
-  
-  # Get line number for t value in pairwise df
-  line <- ifelse(cgroup == 1 & tgroup == 3, 1,
-                 ifelse(cgroup == 1 & tgroup == 4, 2,
-                        ifelse(cgroup == 2 & tgroup == 3, 3,
-                               ifelse(cgroup == 2 & tgroup == 4, 4,
-                                      0))))
-  
-  d <- as.numeric(pairwise1$eff_size_d[line])
-  n1 <- as.numeric(obs$final[cgroup+1])
-  n2 <- as.numeric(obs$final[tgroup+1])
-  meta11 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2)) 
-  meta21 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
-  
-  d <- as.numeric(pairwise2$eff_size_d[line])
-  n1 <- as.numeric(obs_s2$final[cgroup+1])
-  n2 <- as.numeric(obs_s2$final[tgroup+1])
-  meta12 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2)) 
-  meta22 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
-  
-  d <- as.numeric(pairwise3$eff_size_d[line])
-  n1 <- as.numeric(obs_s3$final[cgroup+1])
-  n2 <- as.numeric(obs_s3$final[tgroup+1])
-  meta13 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2)) 
-  meta23 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
-  
-  meta1 <- (meta11 + meta12 + meta13)
-  meta2 <- (meta21 + meta22 + meta23)
-  meta <- meta1 / meta2
-  
-  upper <- meta + 1.96 * (sqrt(1 /meta2))
-  return(upper)
-}
-
-func_meta_lower <- function(pairwise1 = pairwise_paffect,
-                            pairwise2 = pairwise_paffect_s2,
-                            pairwise3 = pairwise_paffect_post_s3,
-                            control = "passive",
-                            treat = "prosocial") {
-  # Get group number for control group (1=passive, 2=active)
-  cgroup <- ifelse(control == "passive", 1, 
-                   ifelse(control == "active", 2, 0))
-  
-  # Get group number for contorl group (3=prosocial, 4=societal)
-  tgroup <- ifelse(treat == "prosocial", 3, 
-                   ifelse(treat == "societal", 4, 0))
-  
-  # Get line number for t value in pairwise df
-  line <- ifelse(cgroup == 1 & tgroup == 3, 1,
-                 ifelse(cgroup == 1 & tgroup == 4, 2,
-                        ifelse(cgroup == 2 & tgroup == 3, 3,
-                               ifelse(cgroup == 2 & tgroup == 4, 4,
-                                      0))))
-  
-  d <- as.numeric(pairwise1$eff_size_d[line])
-  n1 <- as.numeric(obs$final[cgroup+1])
-  n2 <- as.numeric(obs$final[tgroup+1])
-  meta11 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2))
-  meta21 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
-  
-  d <- as.numeric(pairwise2$eff_size_d[line])
-  n1 <- as.numeric(obs_s2$final[cgroup+1])
-  n2 <- as.numeric(obs_s2$final[tgroup+1])
-  meta12 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2)) 
-  meta22 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
-  
-  d <- as.numeric(pairwise3$eff_size_d[line])
-  n1 <- as.numeric(obs_s3$final[cgroup+1])
-  n2 <- as.numeric(obs_s3$final[tgroup+1])
-  meta13 <- (d * (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2)) 
-  meta23 <- (1 / (sqrt((n1 + n2) / (n1 * n2)) + ((d^2) / (2 * (n1 + n2))))^2) 
-  
-  meta1 <- (meta11 + meta12 + meta13)
-  meta2 <- (meta21 + meta22 + meta23)
-  meta <- meta1 / meta2
-  
-  lower <- meta - 1.96 * (sqrt(1 /meta2))
-  return(lower)
-}
-
-
-
-
-# CIs for effet sizes #########################################################
-func_upper_ci_t <- function(pairwise = pairwise_paffect,
-                            obs = obs,
-                            control = "passive",
-                            treat = "prosocial") {
-  
-  # Get group number for control group (1=passive, 2=active)
-  cgroup <- ifelse(control == "passive", 1, 
-                   ifelse(control == "active", 2, 0))
-  
-  # Get group number for contorl group (3=prosocial, 4=societal)
-  tgroup <- ifelse(treat == "prosocial", 3, 
-                   ifelse(treat == "societal", 4, 0))
-  
-  # Get line number for t value in pairwise df
-  line <- ifelse(cgroup == 1 & tgroup == 3, 1,
-                 ifelse(cgroup == 1 & tgroup == 4, 2,
-                        ifelse(cgroup == 2 & tgroup == 3, 3,
-                               ifelse(cgroup == 2 & tgroup == 4, 4,
-                                      0))))
-  
-  t <- pairwise$t[line]
-  n1 <- as.numeric(obs$final[cgroup+1])
-  n2 <- as.numeric(obs$final[tgroup+1]) 
-  
-  upper <- MBESS::ci.smd(ncp=t, n.1=n1, n.2=n2, conf.level=0.95)
-  return(upper$Upper.Conf.Limit.smd)
-}
-
-
-func_lower_ci_t <- function(pairwise = pairwise_paffect,
-                            obs = obs,
-                            control = "passive",
-                            treat = "prosocial") {
-  
-  # Get group number for control group (1=passive, 2=active)
-  cgroup <- ifelse(control == "passive", 1, 
-                   ifelse(control == "active", 2, 0))
-  
-  # Get group number for contorl group (3=prosocial, 4=societal)
-  tgroup <- ifelse(treat == "prosocial", 3, 
-                   ifelse(treat == "societal", 4, 0))
-  
-  # Get line number for t value in pairwise df
-  line <- ifelse(cgroup == 1 & tgroup == 3, 1,
-                 ifelse(cgroup == 1 & tgroup == 4, 2,
-                        ifelse(cgroup == 2 & tgroup == 3, 3,
-                               ifelse(cgroup == 2 & tgroup == 4, 4,
-                                      0))))
-  
-  t <- pairwise$t[line]
-  n1 <- as.numeric(obs$final[cgroup+1])
-  n2 <- as.numeric(obs$final[tgroup+1]) 
-  
-  lower <- MBESS::ci.smd(ncp=t, n.1=n1, n.2=n2, conf.level=0.95)
-  return(lower$Lower.Conf.Limit.smd)
-}
-
-
-
-
-
-func_upper_ci_t_paired <- function(pairwise = pairwise_paffect_time_s3,
-                                   treat = "prosocial") {
-  # Get group number for contorl group (3=prosocial, 4=societal)
-  tgroup <- ifelse(treat == "prosocial", 3, 
-                   ifelse(treat == "societal", 4, 0))
-  
-  t <- pairwise$t[tgroup]
-  n1 <- as.numeric(obs_s3$final[tgroup+1])
-  
-  # Code from https://github.com/Lakens/perfect-t-test/blob/master/Perfect_dependent_t-test.Rmd
-  nct_limits <- MBESS::conf.limits.nct(t.value = t, df=n1-1, conf.level = 0.95)
-  ci_u_d_z <- nct_limits$Upper.Limit/sqrt(n1) #Not sure about this formula
-  
-  return(ci_u_d_z)
-}
-
-func_lower_ci_t_paired <- function(pairwise = pairwise_paffect_time_s3,
-                                   treat = "prosocial") {
-  # Get group number for contorl group (3=prosocial, 4=societal)
-  tgroup <- ifelse(treat == "prosocial", 3, 
-                   ifelse(treat == "societal", 4, 0))
-  
-  t <- pairwise$t[tgroup]
-  n1 <- as.numeric(obs_s3$final[tgroup+1])
-  
-  # Code from https://github.com/Lakens/perfect-t-test/blob/master/Perfect_dependent_t-test.Rmd
-  nct_limits <- MBESS::conf.limits.nct(t.value = t, df=n1-1, conf.level = 0.95)
-  ci_l_d_z <- nct_limits$Lower.Limit/sqrt(n1) #Not sure about this formula, but gives same results as Wuensch's files
-  
-  return(ci_l_d_z)
-}
-
-
-
-# Round values ################################################################
+# 3.7 Round values ############################################################
 
 # Round to 2 digits
 myround2 <- function(x) {
@@ -861,61 +882,3 @@ myround_apa <- function(x) {
 }
 
 
-# Correlation table ###########################################################
-# Correlation table
-# x is a matrix containing the data
-# method : correlation method. "pearson"" or "spearman"" is supported
-# removeTriangle : remove upper or lower triangle# results :  if "html" or "latex"
-# the results will be displayed in html or latex format# labels_rows and labels_cols are character vectors for labeling rows and columns
-corstars <- function(x, method=c("pearson", "spearman"),
-                     removeTriangle=c("upper", "lower"),
-                     result=c("none", "html", "latex"),
-                     labels_rows, labels_cols, 
-                     cap = c("Correlation"), filename = ""){
-  #Compute correlation matrix
-  x <- as.matrix(x)
-  correlation_matrix<-Hmisc::rcorr(x, type=method[1])
-  R <- correlation_matrix$r # Matrix of correlation coeficients
-  p <- correlation_matrix$P # Matrix of p-value 
-  
-  ## Define notions for significance levels; spacing is important.
-  mystars <- ifelse(p < .01,"**", ifelse(p < .05, "* ", "  "))
-  #mystars <- ifelse(p < .001, "****", ifelse(p < .001, "*** ", ifelse(p < .01, "**  ", ifelse(p < .05, "*   ", "    "))))
-  
-  ## trunctuate the correlation matrix to two decimal
-  R <- format(round(cbind(rep(-1.11, ncol(x)), R), 2))[,-1]
-  
-  ## build a new matrix that includes the correlations with their apropriate stars
-  Rnew <- matrix(paste(R, mystars, sep=""), ncol=ncol(x))
-  diag(Rnew) <- paste(diag(R), " ", sep="")
-  rownames(Rnew) <- colnames(x)
-  colnames(Rnew) <- paste(colnames(x), "", sep="")
-  
-  ## remove upper triangle of correlation matrix
-  if(removeTriangle[1]=="upper"){
-    Rnew <- as.matrix(Rnew)
-    Rnew[upper.tri(Rnew, diag = TRUE)] <- ""
-    Rnew <- as.data.frame(Rnew)
-  }
-  
-  ## remove lower triangle of correlation matrix
-  else if(removeTriangle[1]=="lower"){
-    Rnew <- as.matrix(Rnew)
-    Rnew[lower.tri(Rnew, diag = TRUE)] <- ""
-    Rnew <- as.data.frame(Rnew)
-  }
-  
-  ## remove last column and return the correlation matrix
-  Rnew <- cbind(Rnew[1:length(Rnew)-1])
-  rownames(Rnew) <- labels_rows
-  colnames(Rnew) <- labels_cols
-  if (result[1]=="none") return(Rnew)
-  else{
-    if(result[1]=="html") print(xtable::xtable(Rnew, caption = cap), 
-                                type="html",
-                                caption.placement = "top",
-                                file = filename)
-    else print(xtable::xtable(Rnew, caption = cap), 
-               type="latex")
-  }
-} 

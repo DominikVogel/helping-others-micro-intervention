@@ -1,10 +1,13 @@
-# Forest plot prosocial
+###############################################################################
+############ Forest Plot (Figure 5) - Part A: Prosocial #######################
+###############################################################################
 
 
 
-# Effect sizes ################################################################
 
-# Positive Affect =============================================================
+# 1. Effect sizes #############################################################
+
+# 1.1 Positive Affect =========================================================
 eff_size_paffect_psi_passive_meta <- func_meta_effsize(
   pairwise1 = pairwise_paffect,
   pairwise2 = pairwise_paffect_s2,
@@ -35,7 +38,7 @@ eff_size_paffect_psi_active <- c(
   NA
 )
 
-# Negative Affect =============================================================
+# 1.2 Negative Affect =========================================================
 eff_size_naffect_psi_passive_meta <- func_meta_effsize(
   pairwise1 = pairwise_naffect,
   pairwise2 = pairwise_naffect_s2,
@@ -67,7 +70,7 @@ eff_size_naffect_psi_active <- c(
 )
 
 
-# Turnover intention ==========================================================
+# 1.3 Turnover intention ======================================================
 eff_size_turnover_psi_passive_meta <- func_meta_effsize(
   pairwise1 = pairwise_turnover,
   pairwise2 = pairwise_turnover_s2,
@@ -99,7 +102,7 @@ eff_size_turnover_psi_active <- c(
 )
 
 
-# Willingness to rec. job  ====================================================
+# 1.4 Willingness to rec. job  ================================================
 eff_size_will_psi_passive_meta <- func_meta_effsize(
   pairwise1 = pairwise_will,
   pairwise2 = pairwise_will_s2,
@@ -131,8 +134,8 @@ eff_size_will_psi_active <- c(
 )
 
 
-# Upper CI ####################################################################
-# Positive Affect =============================================================
+# 2. Upper CI #################################################################
+# 2.1 Positive Affect =========================================================
 upper_paffect_psi_passive <- c(
   func_upper_ci_t(pairwise = pairwise_paffect,
                   obs = obs,
@@ -178,7 +181,7 @@ upper_paffect_psi_active <- c(
 
 
 
-# Negative Affect =============================================================
+# 2.2 Negative Affect =========================================================
 upper_naffect_psi_passive <- c(
   func_upper_ci_t(pairwise = pairwise_naffect,
                   obs = obs,
@@ -224,7 +227,7 @@ upper_naffect_psi_active <- c(
 
 
 
-# Turnover =============================================================
+# 2.3 Turnover ================================================================
 upper_turnover_psi_passive <- c(
   func_upper_ci_t(pairwise = pairwise_turnover,
                   obs = obs,
@@ -270,7 +273,7 @@ upper_turnover_psi_active <- c(
 
 
 
-# Will ========================================================================
+# 2.4 Will ====================================================================
 upper_will_psi_passive <- c(
   func_upper_ci_t(pairwise = pairwise_will,
                   obs = obs,
@@ -315,8 +318,8 @@ upper_will_psi_active <- c(
 )
 
 
-# Lower CI ####################################################################
-# Positive Affect =============================================================
+# 3. Lower CI #################################################################
+# 3.1 Positive Affect =========================================================
 lower_paffect_psi_passive <- c(
   func_lower_ci_t(pairwise = pairwise_paffect,
                   obs = obs,
@@ -361,7 +364,7 @@ lower_paffect_psi_active <- c(
 )
 
 
-# Negative Affect =============================================================
+# 3.2 Negative Affect =========================================================
 lower_naffect_psi_passive <- c(
   func_lower_ci_t(pairwise = pairwise_naffect,
                   obs = obs,
@@ -407,7 +410,7 @@ lower_naffect_psi_active <- c(
 
 
 
-# Turnover ====================================================================
+# 3.3 Turnover ================================================================
 lower_turnover_psi_passive <- c(
   func_lower_ci_t(pairwise = pairwise_turnover,
                   obs = obs,
@@ -455,7 +458,7 @@ lower_turnover_psi_active <- c(
 
 
 
-# Will ========================================================================
+# 3.4 Will ====================================================================
 lower_will_psi_passive <- c(
   func_lower_ci_t(pairwise = pairwise_will,
                   obs = obs,
@@ -505,7 +508,7 @@ lower_will_psi_active <- c(
 
 
 
-# Combine everything ##########################################################
+# 4. Combine everything #######################################################
 mean  <- cbind(c(NA, # Passive Control
                  eff_size_paffect_psi_passive,  # paffect
                  eff_size_naffect_psi_passive,  # naffect
@@ -545,7 +548,7 @@ rownames(mean) <- c(1:21)
 rownames(lower) <- c(1:21)
 rownames(upper) <- c(1:21)
 
-# Forestplot ##################################################################
+# 5. Forestplot ###############################################################
 
 tabletext<-cbind(
   # Every line is one column
@@ -635,7 +638,7 @@ tabletext<-cbind(
     ))
 
 
-# Add lines between variables
+# 5.1 Add lines between variables =============================================
 lines <- list(NULL, 
               TRUE, NULL, NULL, NULL, NULL, 
               TRUE, NULL, NULL, NULL, NULL,

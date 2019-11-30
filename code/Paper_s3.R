@@ -1,279 +1,102 @@
+###############################################################################
+################ CODE FOR STUDY 3 #############################################
+###############################################################################
 
-# THIS IS THE BEGINNING OF STUDY 3 CODE XXXXXXXXXXXXXXXXXXXXXXXXX -------------
-# C.2.1 Import pre data =======================================================
+# C.1 Import data =============================================================
+
 # Define variable types to assure consistency
-coltypes_pre <- cols(
-  V1 = col_character(),
-  V2 = col_character(),
-  V3 = col_character(),
-  V4 = col_character(),
-  V5 = col_character(),
-  V6 = col_character(),
-  V7 = col_integer(),
-  V8 = col_datetime(format = ""),
-  V9 = col_datetime(format = ""),
-  V10 = col_integer(),
-  MTurkCode = col_integer(),
-  intro = col_integer(),
-  employment = col_integer(),
-  sector = col_integer(),
-  agree_pre_test = col_integer(),
-  Q29 = col_integer(),
-  paffect1 = col_integer(),
-  paffect2 = col_integer(),
-  paffect3 = col_integer(),
-  paffect4 = col_integer(),
-  paffect5 = col_integer(),
-  paffect6 = col_integer(),
-  naffect1 = col_integer(),
-  naffect2 = col_integer(),
-  naffect3 = col_integer(),
-  naffect4 = col_integer(),
-  naffect5 = col_integer(),
-  naffect6 = col_integer(),
-  willingnessjobrec1 = col_integer(),
-  willingnessjobrec2 = col_integer(),
-  attention1 = col_integer(),
-  turnover1 = col_integer(),
-  turnover2 = col_integer(),
-  turnover3 = col_integer(),
-  prosocialimpact1 = col_integer(),
-  prosocialimpact2 = col_integer(),
-  prosocialimpact3 = col_integer(),
-  societalimpact1 = col_integer(),
-  societalimpact2 = col_integer(),
-  societalimpact3 = col_integer(),
-  attention2 = col_integer(),
-  beneficiaries_obj = col_integer(),
-  beneficiaries1 = col_integer(),
-  beneficiaries2 = col_integer(),
-  openfinal = col_character(),
-  LocationLatitude = col_double(),
-  LocationLongitude = col_double(),
-  LocationAccuracy = col_integer(),
-  AssignmentId = col_character(),
-  WorkerId = col_character(),
-  HITId = col_character(),
-  AssignmentStatus = col_character(),
-  AutoApprovalTime = col_datetime(format = ""),
-  AcceptTime = col_datetime(format = ""),
-  SubmitTime = col_datetime(format = ""),
-  ApprovalTime = col_datetime(format = ""),
-  RejectionTime = col_datetime(format = ""),
-  RequesterFeedback = col_character(),
-  ApprovalRejectionTime = col_integer(),
-  SecondsOnHIT = col_integer(),
-  pre = col_integer()
-)
-
-pre1 <- read_csv(here("data/s3-pre", "part1.csv"), col_types = coltypes_pre)
-pre2 <- read_csv(here("data/s3-pre", "part2.csv"), col_types = coltypes_pre)
-pre3 <- read_csv(here("data/s3-pre", "part3.csv"), col_types = coltypes_pre)
-pre4 <- read_csv(here("data/s3-pre", "part4.csv"), col_types = coltypes_pre)
-pre5 <- read_csv(here("data/s3-pre", "part5.csv"), col_types = coltypes_pre)
-pre6 <- read_csv(here("data/s3-pre", "part6.csv"), col_types = coltypes_pre)
-pre7 <- read_csv(here("data/s3-pre", "part7.csv"), col_types = coltypes_pre)
-pre8 <- read_csv(here("data/s3-pre", "part8.csv"), col_types = coltypes_pre)
-pre9 <- read_csv(here("data/s3-pre", "part9.csv"), col_types = coltypes_pre)
-
-
-
-
-
-
-# C.2.1.1 Merge pre data ------------------------------------------------------
-pre <- bind_rows(pre1, pre2, pre3, pre4, pre5, pre6, pre7, pre8, pre9)
-rm(pre1, pre2, pre3, pre4, pre5, pre6, pre7, pre8, pre9)
-
-
-# C.2.1.2 Keep participants of pre-test only ----------------------------------
-# This excludes those who only participated in the screening
-pre <- pre %>% filter(pre == 1)
-
-
-
-
-# C.2.1.4 Drop dublicates -----------------------------------------------------
-pre %>% group_by(WorkerId) %>% count(WorkerId) %>% arrange(desc(n))
-# No duplicates found
-# pre <- distinct(pre, WorkerId, .keep_all = TRUE)
-
-
-# C.2.1.5 Export pre data -----------------------------------------------------
-#write_csv(pre, "../data/s3-pre.csv")
-
-
-
-
-
-
-
-# C.2.2 Import post data ======================================================
-# Define variable types to assure consistency
-coltypes_post <- cols(
-  V1 = col_character(),
-  V2 = col_character(),
-  V3 = col_character(),
-  V4 = col_character(),
-  V5 = col_character(),
-  V6 = col_character(),
-  V7 = col_integer(),
-  V8 = col_datetime(format = ""),
-  V9 = col_datetime(format = ""),
-  V10 = col_integer(),
-  MTurkCode = col_integer(),
+coltypes <- cols(
+  id = col_double(),
+  treatment = col_double(),
+  startdate_pre = col_datetime(format = ""),
+  enddate_pre = col_datetime(format = ""),
+  employment = col_double(),
+  sector_pre = col_double(),
+  paffect1_pre = col_double(),
+  paffect2_pre = col_double(),
+  paffect3_pre = col_double(),
+  paffect4_pre = col_double(),
+  paffect5_pre = col_double(),
+  paffect6_pre = col_double(),
+  naffect1_pre = col_double(),
+  naffect2_pre = col_double(),
+  naffect3_pre = col_double(),
+  naffect4_pre = col_double(),
+  naffect5_pre = col_double(),
+  naffect6_pre = col_double(),
+  willingnessjobrec1_pre = col_double(),
+  willingnessjobrec2_pre = col_double(),
+  attention1_pre = col_double(),
+  turnover1_pre = col_double(),
+  turnover2_pre = col_double(),
+  turnover3_pre = col_double(),
+  prosocialimpact1_pre = col_double(),
+  prosocialimpact2_pre = col_double(),
+  prosocialimpact3_pre = col_double(),
+  societalimpact1_pre = col_double(),
+  societalimpact2_pre = col_double(),
+  societalimpact3_pre = col_double(),
+  attention2_pre = col_double(),
+  beneficiaries_obj = col_double(),
+  beneficiaries1 = col_double(),
+  beneficiaries2 = col_double(),
+  startdate_post = col_datetime(format = ""),
+  enddate_post = col_datetime(format = ""),
   timebeforetreatment = col_time(format = ""),
   timeaftertreatment = col_time(format = ""),
-  intro = col_integer(),
-  reflectiongeneral = col_character(),
-  reflectionprosocial = col_character(),
-  reflectionsocietal = col_character(),
-  paffect1 = col_integer(),
-  paffect2 = col_integer(),
-  paffect3 = col_integer(),
-  paffect4 = col_integer(),
-  paffect5 = col_integer(),
-  paffect6 = col_integer(),
-  naffect1 = col_integer(),
-  naffect2 = col_integer(),
-  naffect3 = col_integer(),
-  naffect4 = col_integer(),
-  naffect5 = col_integer(),
-  naffect6 = col_integer(),
-  willingnessjobrec1 = col_integer(),
-  willingnessjobrec2 = col_integer(),
-  turnover1 = col_integer(),
-  turnover2 = col_integer(),
-  turnover3 = col_integer(),
-  manipulationcheck = col_integer(),
-  prosocialimpact1 = col_integer(),
-  prosocialimpact2 = col_integer(),
-  prosocialimpact3 = col_integer(),
-  attention1 = col_integer(),
-  societalimpact1 = col_integer(),
-  societalimpact2 = col_integer(),
-  societalimpact3 = col_integer(),
-  taskvariety1 = col_integer(),
-  taskvariety2 = col_integer(),
-  taskvariety3 = col_integer(),
-  taskvariety4 = col_integer(),
-  taskvariety5 = col_integer(),
-  taskanalyz_1 = col_integer(),
-  taskanalyz_2 = col_integer(),
-  taskanalyz_3 = col_integer(),
-  taskanalyz_4 = col_integer(),
-  attention2 = col_integer(),
-  autonomy1 = col_integer(),
-  autonomy2 = col_integer(),
-  autonomy3 = col_integer(),
-  jobtitle = col_character(),
-  manager = col_integer(),
-  gender = col_integer(),
-  yearbirth = col_integer(),
-  sector = col_integer(),
-  atwork = col_integer(),
-  openfinal = col_character(),
-  DO_BR_FL_13 = col_character(),
-  DO_BL_Control = col_character(),
-  DO_Q_prosocialimpact = col_character(),
-  DO_Q_taskvariety = col_character(),
-  DO_Q_taskanalyz = col_character(),
-  DO_Q_autonomy = col_character(),
-  DO_Q_affect = col_character(),
-  DO_Q_turnover = col_character(),
-  DO_Q_willingnessjobrec = col_character(),
-  LocationLatitude = col_double(),
-  LocationLongitude = col_double(),
-  LocationAccuracy = col_integer(),
-  treatment = col_integer(),
-  AssignmentId = col_character(),
-  WorkerId = col_character(),
-  HITId = col_character(),
-  AssignmentStatus = col_character(),
-  AutoApprovalTime = col_datetime(format = ""),
-  AcceptTime = col_datetime(format = ""),
-  SubmitTime = col_datetime(format = ""),
-  ApprovalTime = col_datetime(format = ""),
-  RejectionTime = col_datetime(format = ""),
-  RequesterFeedback = col_character(),
-  ApprovalRejectionTime = col_integer(),
-  SecondsOnHIT = col_integer(),
-  attention_passed = col_integer()
+  paffect1_post = col_double(),
+  paffect2_post = col_double(),
+  paffect3_post = col_double(),
+  paffect4_post = col_double(),
+  paffect5_post = col_double(),
+  paffect6_post = col_double(),
+  naffect1_post = col_double(),
+  naffect2_post = col_double(),
+  naffect3_post = col_double(),
+  naffect4_post = col_double(),
+  naffect5_post = col_double(),
+  naffect6_post = col_double(),
+  willingnessjobrec1_post = col_double(),
+  willingnessjobrec2_post = col_double(),
+  turnover1_post = col_double(),
+  turnover2_post = col_double(),
+  turnover3_post = col_double(),
+  manipulationcheck = col_double(),
+  prosocialimpact1_post = col_double(),
+  prosocialimpact2_post = col_double(),
+  prosocialimpact3_post = col_double(),
+  attention1_post = col_double(),
+  societalimpact1_post = col_double(),
+  societalimpact2_post = col_double(),
+  societalimpact3_post = col_double(),
+  taskvariety1 = col_double(),
+  taskvariety2 = col_double(),
+  taskvariety3 = col_double(),
+  taskvariety4 = col_double(),
+  taskvariety5 = col_double(),
+  taskanalyz1 = col_double(),
+  taskanalyz2 = col_double(),
+  taskanalyz3 = col_double(),
+  taskanalyz4 = col_double(),
+  attention2_post = col_double(),
+  autonomy1 = col_double(),
+  autonomy2 = col_double(),
+  autonomy3 = col_double(),
+  manager = col_double(),
+  gender = col_double(),
+  yearbirth = col_double(),
+  sector_post = col_double(),
+  atwork = col_double()
 )
 
-post1 <- read_csv(here("data/s3-post", "part1.csv"), col_types = coltypes_post)
-post2_1 <- read_csv(here("data/s3-post", "part2-1.csv"), col_types = coltypes_post)
-post2_2 <- read_csv(here("data/s3-post", "part2-2.csv"), col_types = coltypes_post)
-post3 <- read_csv(here("data/s3-post", "part3.csv"), col_types = coltypes_post)
-post4 <- read_csv(here("data/s3-post", "part4.csv"), col_types = coltypes_post)
-post5 <- read_csv(here("data/s3-post", "part5.csv"), col_types = coltypes_post)
-post6 <- read_csv(here("data/s3-post", "part6.csv"), col_types = coltypes_post)
-post7 <- read_csv(here("data/s3-post", "part7.csv"), col_types = coltypes_post)
-post8 <- read_csv(here("data/s3-post", "part8.csv"), col_types = coltypes_post)
+df_merge_s3 <- read_csv(here("data", "Study3_public.csv"),
+                        col_types = coltypes)
 
 
 
-
-
-
-
-
-
-# C.2.2.1 Merge post data -----------------------------------------------------
-post <- bind_rows(post1, post2_1, post2_2, post3, post4, post5, 
-                  post6, post7, post8)
-rm(post1, post2_1, post2_2, post3, post4, post5, post6, post7, post8)
-
-# C.2.2.2 Fix yearbirth error -------------------------------------------------
-post <- post %>%
-  mutate(yearbirth = 2012 - yearbirth)
-
-
-
-
-
-
-
-# C.2.2.5 Drop dublicates -----------------------------------------------------
-post %>% group_by(WorkerId) %>% count(WorkerId) %>% arrange(desc(n))
-# No dublicate found. First entry would have been used
-#post <- distinct(post, WorkerId, .keep_all = TRUE)
-
-# C.2.2.6 Check responses to reflection task ----------------------------------
-# tibble_print_all(post %>% select(WorkerId, reflectiongeneral))
-# tibble_print_all(post %>% select(WorkerId, reflectionprosocial))
-# tibble_print_all(post %>% select(WorkerId, reflectionsocietal))
-
-
-
-
-
-
-# C.2.2.8 Export post data-----------------------------------------------------
-# write_csv(post, "../data/s3-post.csv")
-
-
-
-
-
-
-
-# C.2.3 Merge pre and post ====================================================
-df_merge_s3 <- inner_join(post, pre, 
-                          by = "WorkerId", 
-                          suffix = c("_post", "_pre"))
-rm(post, pre,
-   coltypes_pre, coltypes_post)
-
-
-
-
-
-
-
-
-# C.2.4 Clean data ============================================================
-# C.2.4.1 Store initial n -----------------------------------------------------
+# C.2 Data Management #########################################################
+# C.2.1 Clean data ============================================================
+# C.2.1.1 Store initial n -----------------------------------------------------
 n_total <- tibble(treatment = "total", initial = nrow(df_merge_s3))
 obs_s3 <- df_merge_s3 %>% 
   group_by(treatment) %>% 
@@ -283,7 +106,7 @@ obs_s3 <- bind_rows(n_total, obs_s3)
 rm(n_total)
 
 
-# C.2.4.2 Remove obs how did not receive treatment-----------------------------
+# C.2.1.2 Remove obs how did not receive treatment-----------------------------
 df_merge_s3 <- df_merge_s3 %>%
   mutate(treatment_duration = timeaftertreatment - timebeforetreatment)
 df_merge_s3 <- df_merge_s3 %>% 
@@ -309,7 +132,7 @@ rm(obs_receive)
 
 
 
-# C.2.4.3 Remove obs how did not answer dep var -------------------------------
+# C.2.1.3 Remove obs how did not answer dep var -------------------------------
 df_merge_s3 <- df_merge_s3 %>% 
   mutate(mi_dep = ifelse(is.na(paffect1_post) | is.na(paffect1_pre) |
                            is.na(naffect1_post) | is.na(naffect1_pre) |
@@ -321,7 +144,7 @@ df_merge_s3 <- df_merge_s3 %>%
   select(-mi_dep)
 
 
-# C.2.4.4 Remove participants who do not work in the public sector ------------
+# C.2.1.4 Remove participants who do not work in the public sector ------------
 table(df_merge_s3$sector_post)
 # Sector composition: 418 public, 19 nonprofit, 39 private, 7 NA
 df_merge_s3 <- df_merge_s3 %>%
@@ -337,7 +160,7 @@ obs_public <- bind_rows(n_total, obs_public)
 obs_s3 <- left_join(obs_s3, obs_public)
 rm(obs_public)
 
-# C.2.4.5 Remove obs with failed attention check ------------------------------
+# C.2.1.5 Remove obs with failed attention check ------------------------------
 df_merge_s3 <- df_merge_s3 %>% 
   filter(attention1_pre == 5, 
          attention2_pre == 4,
@@ -358,19 +181,19 @@ obs_s3 <- left_join(obs_s3, obs_attention)
 rm(obs_attention)
 
 
-# C.2.4.6 Remove obs who tried to cheat ---------------------------------------
-# Drop obs because they did not reflect or answer indicate private sector -----
+# C.2.1.6 Remove obs who tried to cheat ---------------------------------------
+# Drop obs because they did not reflect or answer indicate private sector
 df_merge_s3 <- df_merge_s3 %>% 
-  filter(WorkerId != "A2QWVKYC4RSJKM",
-         WorkerId != "A2FIBJ5O89L3XB",
-         WorkerId != "AAE1COF4E8740",
-         WorkerId != "AN4D1WRTKLUYZ",
-         WorkerId != "A1ZCZK4LR2U5AW",
-         WorkerId != "A2174DULPU1NR6",
-         WorkerId != "A2LI51CANHJ00M",
-         WorkerId != "A3329CH71VMUBQ",
-         WorkerId != "A2WKN97R9EXE6B",
-         WorkerId != "A2RHJT0OMA09YH")
+  filter(id != 32,
+         id != 85,
+         id != 161,
+         id != 223,
+         id != 373,
+         id != 393,
+         id != 397,
+         id != 413,
+         id != 424,
+         id != 279)
 
 # Store n
 n_total <- tibble(treatment = "total", final = nrow(df_merge_s3))
@@ -390,32 +213,21 @@ obs_s3
 
 
 
+# C.3 Generate and modify variables ###########################################
 
-
-
-# C.3 rename variables ########################################################
-df_merge_s3 <- df_merge_s3 %>% rename(taskanalyz1 = taskanalyz_1,
-                                      taskanalyz2 = taskanalyz_2,
-                                      taskanalyz3 = taskanalyz_3,
-                                      taskanalyz4 = taskanalyz_4)
-
-
-
-# C.4 Generate and modify variables ###########################################
-
-# C.4.1 Generate factor variables =============================================
+# C.3.1 Generate factor variables =============================================
 df_merge_s3$treatment_f <- factor(df_merge_s3$treatment)
 df_merge_s3$gender_f <- factor(df_merge_s3$gender, 
                                labels = c("Male", "Female", "Other"))
 
-# C.4.2 Set NA categories =====================================================
+# C.3.2 Set NA categories =====================================================
 df_merge_s3 <- df_merge_s3 %>% 
   mutate(atwork = ifelse(atwork == 2, NA, atwork))
 
 
 
 
-# C.4.3 Reverse items =========================================================
+# C.3.3 Reverse items =========================================================
 df_merge_s3 <- df_merge_s3 %>% mutate(turnover1_pre = 8 - turnover1_pre)
 df_merge_s3 <- df_merge_s3 %>% mutate(turnover1_post = 8 - turnover1_post)
 df_merge_s3 <- df_merge_s3 %>% 
@@ -432,7 +244,7 @@ df_merge_s3 <- df_merge_s3 %>% mutate(taskvariety3 = 6 - taskvariety3)
 df_merge_s3 <- df_merge_s3 %>% mutate(taskvariety4 = 6 - taskvariety4)
 df_merge_s3 <- df_merge_s3 %>% mutate(taskvariety5 = 6 - taskvariety5)
 
-# C.4.4 Create Dummies ========================================================
+# C.3.4 Create Dummies ========================================================
 df_merge_s3 <- df_merge_s3 %>% 
   mutate(manager_dummy = ifelse(manager == 0, 0, 1),
          manager_dummy = ifelse(is.na(manager), NA, 
@@ -454,46 +266,18 @@ df_merge_s3 <- df_merge_s3 %>%
 
 
 
-# C.4.5 Count words in reflection task ========================================
-df_merge_s3 <- df_merge_s3 %>% mutate(word_count = NA)
-df_merge_s3 <- df_merge_s3 %>% 
-  mutate(word_count = 
-           ifelse(treatment == 2, 
-                  sapply(gregexpr("[[:alpha:]]+", 
-                                  df_merge_s3$reflectiongeneral),
-                         function(x) sum(x > 0)), 
-                  word_count))
-df_merge_s3 <- df_merge_s3 %>% 
-  mutate(word_count = ifelse(treatment == 3, 
-                             sapply(gregexpr("[[:alpha:]]+", 
-                                             df_merge_s3$reflectionprosocial), 
-                                    function(x) sum(x > 0)),
-                             word_count)) 
-df_merge_s3 <- df_merge_s3 %>% 
-  mutate(word_count = ifelse(treatment == 4, 
-                             sapply(gregexpr("[[:alpha:]]+", 
-                                             df_merge_s3$reflectionsocietal), 
-                                    function(x) sum(x > 0)), 
-                             word_count))
-
-df_merge_s3 <- df_merge_s3 %>% 
-  mutate(word_count = ifelse(treatment != 1 & is.na(word_count),
-                             0, word_count))
 
 
-
-
-
-# C.4.6 Treatment duration ====================================================
+# C.3.5 Treatment duration ====================================================
 
 df_merge_s3 <- df_merge_s3 %>% 
   mutate(treatment_duration = timeaftertreatment - timebeforetreatment)
 
 
 
-# C.4.7 Create dependent variables ============================================
+# C.3.6 Create dependent variables ============================================
 
-# C.4.7.1 Positive Affect -----------------------------------------------------
+# C.3.6.1 Positive Affect -----------------------------------------------------
 crona_paffect_pre_s3 <- psych::alpha(select(df_merge_s3, paffect1_pre, 
                                             paffect2_pre, paffect3_pre, 
                                             paffect4_pre, paffect5_pre, 
@@ -513,7 +297,7 @@ df_merge_s3 <- mean_index(df_merge_s3, "paffect_post",
                             "paffect4_post", "paffect5_post", "paffect6_post"))
 
 
-# C.4.7.2 Negative Affect -----------------------------------------------------
+# C.3.6.2 Negative Affect -----------------------------------------------------
 crona_naffect_pre_s3 <- psych::alpha(select(df_merge_s3, naffect1_pre, 
                                             naffect2_pre, naffect3_pre,
                                             naffect4_pre, naffect5_pre, 
@@ -533,7 +317,7 @@ df_merge_s3 <- mean_index(df_merge_s3, "naffect_post",
                             "naffect4_post", "naffect5_post", "naffect6_post"))
 
 
-# C.4.7.3 Turnover intention --------------------------------------------------
+# C.3.6.3 Turnover intention --------------------------------------------------
 crona_turnover_pre_s3 <- psych::alpha(select(df_merge_s3, turnover1_pre, 
                                              turnover2_pre, turnover3_pre))
 crona_turnover_pre_s3 <- crona_turnover_pre_s3[["total"]][["raw_alpha"]]
@@ -548,7 +332,7 @@ df_merge_s3 <- mean_index(df_merge_s3, "turnover_post",
                           c("turnover1_post", "turnover2_post", 
                             "turnover3_post"))
 
-# C.4.7.4 Willigness to recommend job -----------------------------------------
+# C.3.6.4 Willigness to recommend job -----------------------------------------
 crona_will_pre_s3 <- psych::alpha(select(df_merge_s3, 
                                          willingnessjobrec1_pre, 
                                          willingnessjobrec2_pre))
@@ -568,7 +352,7 @@ df_merge_s3 <- mean_index(df_merge_s3,
                             "willingnessjobrec2_post"))
 
 
-# C.4.5 Create moderator / control variables ==================================
+# C.3.7 Create moderator / control variables ==================================
 
 ## Contact with beneficiaries
 crona_bene_s3 <- psych::alpha(select(df_merge_s3, beneficiaries1, beneficiaries2))
@@ -655,7 +439,7 @@ df_merge_s3 <- df_merge_s3 %>%
 
 
 
-# C.5 Descriptives ############################################################
+# C.4 Descriptives (Prepare Table 4) ##########################################
 
 desc_s3 <- df_merge_s3 %>% 
   group_by(treatment) %>% 
@@ -722,9 +506,9 @@ desc_s3
 
 
 
-# C.6 Manipulation Check ######################################################
+# C.5 Manipulation Check ######################################################
 
-# C.6.1 A: What exactly did we ask you to reflect upon? =======================
+# C.5.1 A: What exactly did we ask you to reflect upon? =======================
 df_merge_s3$manipulationcheck <- 
   factor(df_merge_s3$manipulationcheck,
          levels = c(1, 2, 3, 4),
@@ -744,7 +528,7 @@ manipulationcheck1_s3
 #                             separate_tables = TRUE)
 
 
-# C.6.2 B: Perceived prosocial impact =========================================
+# C.5.2 B: Perceived prosocial impact =========================================
 df_merge_s3 %>% 
   group_by(treatment) %>% 
   summarise(mean = mean(prosocialimpact_post),
@@ -756,7 +540,7 @@ anova_prosocialimpact_s3 <- aov(prosocialimpact_post ~
 summary(anova_prosocialimpact_s3)
 
 
-# C.6.3 C: Perceived societal impact ==========================================
+# C.5.3 C: Perceived societal impact ==========================================
 df_merge_s3 %>% 
   group_by(treatment) %>% 
   summarise(mean = mean(societalimpact_post),
@@ -779,11 +563,10 @@ summary(anova_societalimpact_s3)
 
 
 
-# C.7 ANOVA Hypotheses (Post-test only) #######################################
-# Those analyses are not adviced in general as they ignore the pre-test data
+# C.6 Post-test group differences DVs and controls (for Table 4) ##############
 # Tests are made to compare the results to S1 and S2
 
-# C.7.1 Positive affect =======================================================
+# C.6.1 Positive affect =======================================================
 df_merge_s3 %>% 
   group_by(treatment) %>% 
   summarise(mean = mean(paffect_post),
@@ -798,7 +581,7 @@ effsize_paffect_aov_post_s3 <- sjstats::cohens_f(aov_paffect_post_s3)
 
 
 
-# C.7.2 Negative Affect =======================================================
+# C.6.2 Negative Affect =======================================================
 df_merge_s3 %>% 
   group_by(treatment) %>% 
   summarise(mean = mean(naffect_post),
@@ -814,7 +597,7 @@ effsize_naffect_aov_post_s3 <- sjstats::cohens_f(aov_naffect_post_s3)
 
 
 
-# C.7.3 Turnover intention ====================================================
+# C.6.3 Turnover intention ====================================================
 df_merge_s3 %>% 
   group_by(treatment) %>% 
   summarise(mean = mean(turnover_post),
@@ -830,7 +613,7 @@ effsize_turnover_aov_post_s3 <- sjstats::cohens_f(aov_turnover_post_s3)
 
 
 
-# C.7.4 Willigness to recommend job ===========================================
+# C.6.4 Willigness to recommend job ===========================================
 df_merge_s3 %>% 
   group_by(treatment) %>% 
   summarise(mean = mean(willingnessjobrec_post),
@@ -845,18 +628,18 @@ effsize_will_aov_post_s3 <- sjstats::cohens_f(aov_will_post_s3)
 
 
 
-# C.7.5 Prosocial impact ======================================================
+# C.6.5 Prosocial impact ======================================================
 aov_prosocialimpact_post_s3 <- aov(prosocialimpact_post ~ treatment_f, 
                                    data = df_merge_s3)
 
 
-# C.7.6 Societal impact =======================================================
+# C.6.6 Societal impact =======================================================
 aov_societalimpact_post_s3 <- aov(societalimpact_post ~ treatment_f, 
                                   data = df_merge_s3)
 
 
 
-# C.7.7 Balance test ==========================================================
+# C.6.7 Balance test ==========================================================
 chi_female_s3 <- chisq.test(table(df_merge_s3$gender_f, 
                                   df_merge_s3$treatment_f))
 chi_manager_s3 <- chisq.test(table(df_merge_s3$manager_dummy, 
@@ -891,7 +674,7 @@ stargazer::stargazer(reg_balance_turn1, reg_balance_turn2,
 
 
 
-# C.8 Group comparisons (post-test only) ######################################
+# C.7 Group comparisons (post-test only) ######################################
 
 # Generate treatment factor with reversed oreder of treatments
 # Ensures that the mean differences have the right sign
@@ -911,14 +694,14 @@ df_merge2_3_s3  <- df_merge_s3 %>% filter(treatment == 2 | treatment == 3)
 df_merge2_4_s3  <- df_merge_s3 %>% filter(treatment == 2 | treatment == 4)
 
 
-# C.8.1 Group comparison positive affect ======================================
+# C.7.1 Group comparison positive affect ======================================
 # empty vector to store p-values
 peace <- vector(mode = "numeric", length = 4)
 
 # Clear the results table
 pairwise <- func_empty_resultstable_postonly()
 
-# C.8.1.1 1 vs 3 --------------------------------------------------------------
+# C.7.1.1 Passive Control vs. Prosocial ---------------------------------------
 tee <- func_compare_ttest_postonly(df_merge1_3_s3, 
                                    df_merge1_3_s3$paffect_post, 
                                    df_merge1_3_s3$treatment_f_reversed,
@@ -943,7 +726,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 peace[1] <- tee[["p.value"]]
 
 
-# C.8.1.2 1 vs 4 --------------------------------------------------------------
+# C.7.1.2 Passive Control vs. Societal ----------------------------------------
 tee <- func_compare_ttest_postonly(df_merge1_4_s3, 
                                    df_merge1_4_s3$paffect_post, 
                                    df_merge1_4_s3$treatment_f_reversed,
@@ -968,7 +751,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 peace[2] <- tee[["p.value"]]
 
 
-# C.8.1.3 2 vs 3 --------------------------------------------------------------
+# C.7.1.3 Active Control vs. Prosocial ----------------------------------------
 tee <- func_compare_ttest_postonly(df_merge2_3_s3, 
                                    df_merge2_3_s3$paffect_post, 
                                    df_merge2_3_s3$treatment_f_reversed,
@@ -992,7 +775,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 # Store p-value separatly (for adjustment)
 peace[3] <- tee[["p.value"]]
 
-# C.8.1.4 2 vs 4 --------------------------------------------------------------
+# C.7.1.4 Active Control vs. Societal -----------------------------------------
 tee <- func_compare_ttest_postonly(df_merge2_4_s3, 
                                    df_merge2_4_s3$paffect_post, 
                                    df_merge2_4_s3$treatment_f_reversed,
@@ -1017,7 +800,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 peace[4] <- tee[["p.value"]]
 
 
-# C.8.1.5 Adjusted p-values ---------------------------------------------------
+# C.7.1.5 Adjusted p-values ---------------------------------------------------
 padjust <- p.adjust(peace, method = "BH")
 
 pairwise <- bind_cols(pairwise, as_tibble(padjust))
@@ -1042,14 +825,14 @@ pairwise_paffect_post_s3 <- pairwise
 
 
 
-## C.8.2 Group comparison negative affect =====================================
+## C.7.2 Group comparison negative affect =====================================
 # empty vector to store p-values
 peace <- vector(mode = "numeric", length = 4)
 
 # Clear the results table
 pairwise <- func_empty_resultstable_postonly()
 
-# C.8.2.1 1 vs 3 --------------------------------------------------------------
+# C.7.2.1 Passive Control vs. Prosocial ---------------------------------------
 tee <- func_compare_ttest_postonly(df_merge1_3_s3, 
                                    df_merge1_3_s3$naffect_post, 
                                    df_merge1_3_s3$treatment_f_reversed,
@@ -1074,7 +857,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 peace[1] <- tee[["p.value"]]
 
 
-# C.8.2.2 1 vs 4 --------------------------------------------------------------
+# C.7.2.2 Passive Control vs. Societal ----------------------------------------
 tee <- func_compare_ttest_postonly(df_merge1_4_s3, 
                                    df_merge1_4_s3$naffect_post, 
                                    df_merge1_4_s3$treatment_f_reversed,
@@ -1099,7 +882,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 peace[2] <- tee[["p.value"]]
 
 
-# C.8.2.3 2 vs 3 --------------------------------------------------------------
+# C.7.2.3 Active Control vs. Prosocial ----------------------------------------
 tee <- func_compare_ttest_postonly(df_merge2_3_s3, 
                                    df_merge2_3_s3$naffect_post, 
                                    df_merge2_3_s3$treatment_f_reversed,
@@ -1123,7 +906,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 # Store p-value separatly (for adjustment)
 peace[3] <- tee[["p.value"]]
 
-# C.8.2.4 2 vs 4 --------------------------------------------------------------
+# C.7.2.4 Active Control vs. Societal -----------------------------------------
 tee <- func_compare_ttest_postonly(df_merge2_4_s3, 
                                    df_merge2_4_s3$naffect_post, 
                                    df_merge2_4_s3$treatment_f_reversed,
@@ -1148,7 +931,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 peace[4] <- tee[["p.value"]]
 
 
-# C.8.2.5 Adjusted p-values ---------------------------------------------------
+# C.7.2.5 Adjusted p-values ---------------------------------------------------
 padjust <- p.adjust(peace, method = "BH")
 
 pairwise <- bind_cols(pairwise, as_tibble(padjust))
@@ -1167,14 +950,14 @@ pairwise_naffect_post_s3 <- pairwise
 
 
 
-## C.8.3 Group comparison turnover intention ==================================
+## C.7.3 Group comparison turnover intention ==================================
 # empty vector to store p-values
 peace <- vector(mode = "numeric", length = 4)
 
 # Clear the results table
 pairwise <- func_empty_resultstable_postonly()
 
-# C.8.3.1 1 vs 3 --------------------------------------------------------------
+# C.7.3.1 Passive Control vs. Prosocial ---------------------------------------
 tee <- func_compare_ttest_postonly(df_merge1_3_s3, 
                                    df_merge1_3_s3$turnover_post, 
                                    df_merge1_3_s3$treatment_f_reversed,
@@ -1199,7 +982,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 peace[1] <- tee[["p.value"]]
 
 
-# C.8.3.2 1 vs 4 --------------------------------------------------------------
+# C.7.3.2 Passive Control vs. Societal ----------------------------------------
 tee <- func_compare_ttest_postonly(df_merge1_4_s3, 
                                    df_merge1_4_s3$turnover_post, 
                                    df_merge1_4_s3$treatment_f_reversed,
@@ -1224,7 +1007,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 peace[2] <- tee[["p.value"]]
 
 
-# C.8.3.3 2 vs 3 --------------------------------------------------------------
+# C.7.3.3 Active Control vs. Prosocial ----------------------------------------
 tee <- func_compare_ttest_postonly(df_merge2_3_s3, 
                                    df_merge2_3_s3$turnover_post, 
                                    df_merge2_3_s3$treatment_f_reversed,
@@ -1248,7 +1031,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 # Store p-value separatly (for adjustment)
 peace[3] <- tee[["p.value"]]
 
-# C.8.3.4 2 vs 4 --------------------------------------------------------------
+# C.7.3.4 Active Control vs. Societal -----------------------------------------
 tee <- func_compare_ttest_postonly(df_merge2_4_s3, 
                                    df_merge2_4_s3$turnover_post, 
                                    df_merge2_4_s3$treatment_f_reversed,
@@ -1273,7 +1056,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 peace[4] <- tee[["p.value"]]
 
 
-# C.8.3.5 Adjusted p-values ---------------------------------------------------
+# C.7.3.5 Adjusted p-values ---------------------------------------------------
 padjust <- p.adjust(peace, method = "BH")
 
 pairwise <- bind_cols(pairwise, as_tibble(padjust))
@@ -1289,14 +1072,14 @@ pairwise_turnover_post_s3 <- pairwise
 
 
 
-## C.8.4 Group comparison willigness to recommend job =========================
+## C.7.4 Group comparison willigness to recommend job =========================
 # empty vector to store p-values
 peace <- vector(mode = "numeric", length = 4)
 
 # Clear the results table
 pairwise <- func_empty_resultstable_postonly()
 
-# C.8.4.1 1 vs 3 --------------------------------------------------------------
+# C.7.4.1 Passive Control vs. Prosocial ---------------------------------------
 tee <- func_compare_ttest_postonly(df_merge1_3_s3, 
                                    df_merge1_3_s3$willingnessjobrec_post, 
                                    df_merge1_3_s3$treatment_f_reversed,
@@ -1321,7 +1104,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 peace[1] <- tee[["p.value"]]
 
 
-# C.8.4.2 1 vs 4 --------------------------------------------------------------
+# C.7.4.2 Passive Control vs. Societal ----------------------------------------
 tee <- func_compare_ttest_postonly(df_merge1_4_s3, 
                                    df_merge1_4_s3$willingnessjobrec_post, 
                                    df_merge1_4_s3$treatment_f_reversed,
@@ -1346,7 +1129,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 peace[2] <- tee[["p.value"]]
 
 
-# C.8.4.3 2 vs 3 --------------------------------------------------------------
+# C.7.4.3 Active Control vs. Prosocial ----------------------------------------
 tee <- func_compare_ttest_postonly(df_merge2_3_s3, 
                                    df_merge2_3_s3$willingnessjobrec_post, 
                                    df_merge2_3_s3$treatment_f_reversed,
@@ -1370,7 +1153,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 # Store p-value separatly (for adjustment)
 peace[3] <- tee[["p.value"]]
 
-# C.8.4.4 2 vs 4 --------------------------------------------------------------
+# C.7.4.4 Active Control vs. Societal -----------------------------------------
 tee <- func_compare_ttest_postonly(df_merge2_4_s3, 
                                    df_merge2_4_s3$willingnessjobrec_post, 
                                    df_merge2_4_s3$treatment_f_reversed,
@@ -1395,7 +1178,7 @@ pairwise <- func_compare_writetable_postonly(pairwise,
 peace[4] <- tee[["p.value"]]
 
 
-# C.8.4.5 Adjusted p-values ---------------------------------------------------
+# C.7.4.5 Adjusted p-values ---------------------------------------------------
 padjust <- p.adjust(peace, method = "BH")
 
 pairwise <- bind_cols(pairwise, as_tibble(padjust))
@@ -1427,7 +1210,7 @@ pairwise_will_post_s3
 
 
 
-# C.9 Results table ANOVA #####################################################
+# C.8 Descriptives (Table 4) ##################################################
 aov_paffect_result_s3 <- aov_result(aov_paffect_post_s3)
 aov_naffect_result_s3 <- aov_result(aov_naffect_post_s3)
 aov_turnover_result_s3 <- aov_result(aov_turnover_post_s3)
@@ -1516,8 +1299,8 @@ desc_s3
 
 
 
-# C.10 Plot DVs (post-test only) ##############################################
-# Prepare data (sd, n, se, ci per treatment per variable)
+# C.9 Plot DVs (post-test only) (Figure 3) ####################################
+# C.9.1 Prepare data (sd, n, se, ci per treatment per variable) ===============
 df_merge_sum_s3 <- df_merge_s3 %>% 
   select(treatment, paffect_post, naffect_post, 
          turnover_post, willingnessjobrec_post) %>%
@@ -1595,7 +1378,7 @@ df_merge_sum2_s3 <- df_merge_sum2_s3 %>%
 dodge <- position_dodge(.8) # how much jitter on the x-axis?
 
 
-# Plot
+# C.9.2 Plot ==================================================================
 meanplot_s3 <- ggplot(df_merge_sum2_s3, aes(x=var_f, y=mean, 
                                             color =treatment_f)) + 
   geom_errorbar(aes(ymin=lower_ci,
@@ -1689,7 +1472,7 @@ rm(df_merge_sum_s3, df_merge_sum2_s3, df_merge_sum3_s3, df_merge_sum4_s3)
 
 
 
-# C.11 Results table group compare (post-test only) ###########################
+# C.10 Results table group compare (post-test only) ###########################
 pairwise_paffect_post2_s3 <- 
   pairwise_paffect_post_s3 %>%
   mutate(var = "paffect_post") %>%
@@ -1795,7 +1578,7 @@ results_table2_s3
 
 
 
-# C.12 Regression with beneficiary contact (H4) ###############################
+# C.11 Regression with beneficiary contact (H4) ###############################
 # Model 1: Treatment only
 reg_paffect_s3 <- lm(paffect_post ~ treatment_f, data = df_merge_s3)
 reg_naffect_s3 <- lm(naffect_post ~ treatment_f, data = df_merge_s3)
@@ -1821,84 +1604,37 @@ reg_turnover4_s3 <- update(reg_turnover_s3, . ~ . + beneficiaries_obj*treatment_
 reg_will4_s3 <- update(reg_will_s3, . ~ . + beneficiaries_obj*treatment_f)
 
 
-# C.12.1 Regression with exogeneous control variables only ####################
-
-# Model 2: Add exogenous control variables
-reg_paffect_control_s3 <- update(reg_paffect_s3, . ~ . + female + age + manager)
-reg_naffect_control_s3 <- update(reg_naffect_s3, . ~ . + female + age + manager)
-reg_turnover_control_s3 <- update(reg_turnover_s3, . ~ . + female + age + manager)
-reg_will_control_s3 <- update(reg_will_s3, . ~ . + female + age + manager)
-
-stargazer::stargazer(reg_paffect_s3, reg_paffect_control_s3, 
-                     reg_naffect_s3, reg_naffect_control_s3,
-                     reg_turnover_s3, reg_turnover_control_s3,
-                     reg_will_s3, reg_will_control_s3,
-                     type = "html",
-                     out = here("analysis", "S3_Reg_Controls.html"),
-                     title = "Study 3: OLS regression with exogenous control variables",
-                     dep.var.labels.include = TRUE,
-                     dep.var.caption = "",
-                     dep.var.labels = c("Positive affect",
-                                        "Negative affect",
-                                        "Turnover intent.",
-                                        "Will. rec. job"),
-                     star.cutoffs = c(.05, .01, .001),
-                     covariate.labels = c("Treat. B (Active control)",
-                                          "Treat. C (Prosocial impact)",
-                                          "Treat. D (Societal impact)",
-                                          "Gender (1 = female)",
-                                          "Age",
-                                          "Leadership position"),
-                     keep.stat = c("n", "rsq", "adj.rsq"),
-                     notes = "Standard errors in parantheses",
-                     notes.append = TRUE,
-                     report = "vc*s",
-                     font.size = "small",
-                     align = TRUE)
 
 
 
 
 
+# C.12 Analyse pre/post-test differences (mixed effects) (Table 5) ############
 
-
-# C.13 Analyse pre/post-test differences (mixed effects model) ################
-
-# C.13.1 Mixed effect positive affect =========================================
-# C.13.1.1 Prepare data -------------------------------------------------------
+# C.12.1 Mixed effect positive affect =========================================
+# C.12.1.1 Prepare data -------------------------------------------------------
 # Select paffect only and transform from wide to long
 df_merge_s3_paffect_long <- df_merge_s3 %>% 
-  select(WorkerId, paffect_pre, paffect_post, treatment_f) %>%
-  gather(-WorkerId, -treatment_f, 
+  select(id, paffect_pre, paffect_post, treatment_f) %>%
+  gather(-id, -treatment_f, 
          key = "time", 
          value = "paffect",
          factor_key = TRUE) %>%
-  mutate(WorkerId = as.factor(WorkerId)) %>%
-  arrange(WorkerId)
+  mutate(id = as.factor(id)) %>%
+  arrange(id)
 
 
-# C.13.1.2 mixed effect ANOVA --------------------------------------------
+# C.12.1.2 mixed effect ANOVA  ------------------------------------------------
 # Option A (Standard aov) - seems to be easier to interpret
-rmaov_paffect <- aov(paffect ~ treatment_f * time + Error(WorkerId/time), 
+rmaov_paffect <- aov(paffect ~ treatment_f * time + Error(id/time), 
                      data = df_merge_s3_paffect_long)
 summary(rmaov_paffect)
 
-# First part (Error: WorkerId): test for between-differences
-# ==> If we ignore time, the treatment groups do not differ significantly
-# Second part (Error: WorkerId:time): test for within differences
-# ==> If we ignore the treatment groups, paffect does not differ over time 
-# (between pre and post measure)
-# ==> The effect of time  differs between treatment groups 
-# That's what we are interested in!
-# Now we can test differences between pre and post for each group
-# (t-tests for pre-/post means per group) = post-hoc tests of within-effects
-# as well as (pairwise t-tests of gain scores) =
-# post-hoc test of interaction effects
 
 # Option B (ezANOVA) : easier to spacify but more difficult to interpret
 rmezaov_paffect <- ez::ezANOVA(data = df_merge_s3_paffect_long, 
                                dv = .(paffect), 
-                               wid = .(WorkerId), 
+                               wid = .(id), 
                                between = .(treatment_f), 
                                within = .(time),
                                type = 2,
@@ -1906,56 +1642,30 @@ rmezaov_paffect <- ez::ezANOVA(data = df_merge_s3_paffect_long,
 
 rmezaov_paffect
 
-# # HLM
-# # There is also a HLM option, but I do not understand
-# nullmodel <- nlme::lme(paffect ~ 1, 
-#                        random = ~1|WorkerId/time, 
-#                        data=new2,
-#                        method = "ML")
-# model <- nlme::lme(paffect ~ treatment_f + time, 
-#                    random = ~1|WorkerId/time, 
-#                    data=new2,
-#                    method = "ML")
-# anova(nullmodel, model)
-# summary(model)
 
 
 
-
-# # ANCOVA
-# anova(lm(df_merge_s3$paffect_post ~ df_merge_s3$paffect_pre + 
-#            df_merge_s3$treatment_f))
-
-
-
-
-
-
-
-
-
-
-# C.13.2 Mixed effect negative affect =========================================
-# C.13.2.1 Prepare data -------------------------------------------------------
+# C.12.2 Mixed effect negative affect =========================================
+# C.12.2.1 Prepare data -------------------------------------------------------
 # Select naffect only and transform from wide to long
 df_merge_s3_naffect_long <- df_merge_s3 %>% 
-  select(WorkerId, naffect_pre, naffect_post, treatment_f) %>%
-  gather(-WorkerId, -treatment_f, 
+  select(id, naffect_pre, naffect_post, treatment_f) %>%
+  gather(-id, -treatment_f, 
          key = "time", 
          value = "naffect",
          factor_key = TRUE) %>%
-  mutate(WorkerId = as.factor(WorkerId)) %>%
-  arrange(WorkerId)
+  mutate(id = as.factor(id)) %>%
+  arrange(id)
 
 
-# C.13.2.2 mixed effect ANOVA -------------------------------------------------
-rmaov_naffect <- aov(naffect ~ treatment_f * time + Error(WorkerId/time), 
+# C.12.2.2 mixed effect ANOVA -------------------------------------------------
+rmaov_naffect <- aov(naffect ~ treatment_f * time + Error(id/time), 
                      data = df_merge_s3_naffect_long)
 summary(rmaov_naffect)
 
 rmezaov_naffect <- ez::ezANOVA(data = df_merge_s3_naffect_long, 
                                dv = .(naffect), 
-                               wid = .(WorkerId), 
+                               wid = .(id), 
                                between = .(treatment_f), 
                                within = .(time),
                                type = 2,
@@ -1966,27 +1676,27 @@ rmezaov_naffect <- ez::ezANOVA(data = df_merge_s3_naffect_long,
 
 
 
-# C.13.3 Mixed effect turnover intention ======================================
-# C.13.3.1 Prepare data -------------------------------------------------------
+# C.12.3 Mixed effect turnover intention ======================================
+# C.12.3.1 Prepare data -------------------------------------------------------
 # Select naffect only and transform from wide to long
 df_merge_s3_turnover_long <- df_merge_s3 %>% 
-  select(WorkerId, turnover_pre, turnover_post, treatment_f) %>%
-  gather(-WorkerId, -treatment_f, 
+  select(id, turnover_pre, turnover_post, treatment_f) %>%
+  gather(-id, -treatment_f, 
          key = "time", 
          value = "turnover",
          factor_key = TRUE) %>%
-  mutate(WorkerId = as.factor(WorkerId)) %>%
-  arrange(WorkerId)
+  mutate(id = as.factor(id)) %>%
+  arrange(id)
 
 
-# C.13.3.2 mixed effect ANOVA -------------------------------------------------
-rmaov_turnover <- aov(turnover ~ treatment_f * time + Error(WorkerId/time), 
+# C.12.3.2 mixed effect ANOVA -------------------------------------------------
+rmaov_turnover <- aov(turnover ~ treatment_f * time + Error(id/time), 
                       data = df_merge_s3_turnover_long)
 summary(rmaov_turnover)
 
 rmezaov_turnover <- ez::ezANOVA(data = df_merge_s3_turnover_long, 
                                 dv = .(turnover), 
-                                wid = .(WorkerId), 
+                                wid = .(id), 
                                 between = .(treatment_f), 
                                 within = .(time),
                                 type = 2,
@@ -1999,28 +1709,28 @@ rmezaov_turnover <- ez::ezANOVA(data = df_merge_s3_turnover_long,
 
 
 
-# C.13.4 Mixed effect willingness to recommend job ============================
-# C.13.4.1 Prepare data -------------------------------------------------------
+# C.12.4 Mixed effect willingness to recommend job ============================
+# C.12.4.1 Prepare data -------------------------------------------------------
 # Select naffect only and transform from wide to long
 df_merge_s3_will_long <- df_merge_s3 %>% 
-  select(WorkerId, willingnessjobrec_pre, willingnessjobrec_post, 
+  select(id, willingnessjobrec_pre, willingnessjobrec_post, 
          treatment_f) %>%
-  gather(-WorkerId, -treatment_f, 
+  gather(-id, -treatment_f, 
          key = "time", 
          value = "will",
          factor_key = TRUE) %>%
-  mutate(WorkerId = as.factor(WorkerId)) %>%
-  arrange(WorkerId)
+  mutate(id = as.factor(id)) %>%
+  arrange(id)
 
 
-# C.13.4.2 mixed effect ANOVA -------------------------------------------------
-rmaov_will <- aov(will ~ treatment_f * time + Error(WorkerId/time), 
+# C.12.4.2 mixed effect ANOVA -------------------------------------------------
+rmaov_will <- aov(will ~ treatment_f * time + Error(id/time), 
                   data = df_merge_s3_will_long)
 summary(rmaov_will)
 
 rmezaov_will <- ez::ezANOVA(data = df_merge_s3_will_long, 
                             dv = .(will), 
-                            wid = .(WorkerId), 
+                            wid = .(id), 
                             between = .(treatment_f), 
                             within = .(time),
                             type = 2,
@@ -2029,7 +1739,7 @@ rmezaov_will <- ez::ezANOVA(data = df_merge_s3_will_long,
 
 
 
-# C.13.5 Results ==============================================================
+# C.12.5 Results ==============================================================
 apaTables::apa.ezANOVA.table(rmezaov_paffect,
                              table.title = "Positive Affect (Mixed effects ANOVA)",
                              correction = "none")
@@ -2061,13 +1771,13 @@ rmaov_table <- tibble(Effect = c("Treatment", "Time", "Treatment * Time"),
                       )
 
 
-# C.14 Group comparisons time (paired t-tests) ################################
+# C.13 Group comparisons time (paired t-tests) ################################
 df_merge1_s3 <- df_merge_s3 %>% filter(treatment == 1)
 df_merge2_s3 <- df_merge_s3 %>% filter(treatment == 2)
 df_merge3_s3 <- df_merge_s3 %>% filter(treatment == 3)
 df_merge4_s3 <- df_merge_s3 %>% filter(treatment == 4)
 
-# C.14.1 Group comparison positive affect =====================================
+# C.13.1 Group comparison positive affect =====================================
 
 # empty vector to store p-values
 peace <- vector(mode = "numeric", length = 4)
@@ -2079,7 +1789,7 @@ pairwise <- func_empty_resultstable()
 
 
 
-# C.14.1.1 Treatment 1 --------------------------------------------------------
+# C.13.1.1 Treatment 1: Passive Control ---------------------------------------
 tee <- func_compare_ttest(df_merge1_s3, 
                           df_merge1_s3$paffect_post, 
                           df_merge1_s3$paffect_pre,
@@ -2102,7 +1812,7 @@ peace[1] <- tee[["p.value"]]
 
 
 
-# C.14.1.2 Treatment 2 --------------------------------------------------------
+# C.13.1.2 Treatment 2: Active Control ----------------------------------------
 tee <- func_compare_ttest(df_merge2_s3, 
                           df_merge2_s3$paffect_post, 
                           df_merge2_s3$paffect_pre,
@@ -2125,7 +1835,7 @@ peace[2] <- tee[["p.value"]]
 
 
 
-# C.14.1.3 Treatment 3 --------------------------------------------------------
+# C.13.1.3 Treatment 3: Prosocial ---------------------------------------------
 tee <- func_compare_ttest(df_merge3_s3, 
                           df_merge3_s3$paffect_post, 
                           df_merge3_s3$paffect_pre,
@@ -2147,7 +1857,7 @@ peace[3] <- tee[["p.value"]]
 
 
 
-# C.14.1.4 Treatment 4 --------------------------------------------------------
+# C.13.1.4 Treatment 4: Societal ----------------------------------------------
 tee <- func_compare_ttest(df_merge4_s3, 
                           df_merge4_s3$paffect_post, 
                           df_merge4_s3$paffect_pre,
@@ -2169,7 +1879,7 @@ peace[4] <- tee[["p.value"]]
 
 
 
-# C.14.1.5 Adjusted p-values -------------------------------------------------
+# C.13.1.5 Adjusted p-values -------------------------------------------------
 padjust <- p.adjust(peace, method = "BH")
 
 pairwise <- bind_cols(pairwise, as_tibble(padjust))
@@ -2183,13 +1893,13 @@ pairwise_paffect_time_s3 <- pairwise
 
 
 
-# C.14.2 Group comparison negative affect =====================================
+# C.13.2 Group comparison negative affect =====================================
 # empty vector to store p-values
 peace <- vector(mode = "numeric", length = 4)
 
 pairwise <- func_empty_resultstable()
 
-# C.14.2.1 Treatment 1 --------------------------------------------------------
+# C.13.2.1 Treatment 1: Passive Control ---------------------------------------
 tee <- func_compare_ttest(df_merge1_s3, 
                           df_merge1_s3$naffect_post, 
                           df_merge1_s3$naffect_pre,
@@ -2212,7 +1922,7 @@ peace[1] <- tee[["p.value"]]
 
 
 
-# C.14.2.2 Treatment 2 --------------------------------------------------------
+# C.13.2.2 Treatment 2: Active Control ----------------------------------------
 tee <- func_compare_ttest(df_merge2_s3, 
                           df_merge2_s3$naffect_post, 
                           df_merge2_s3$naffect_pre,
@@ -2236,7 +1946,7 @@ peace[2] <- tee[["p.value"]]
 
 
 
-# C.14.2.3 Treatment 3 --------------------------------------------------------
+# C.13.2.3 Treatment 3: Prosocial ---------------------------------------------
 tee <- func_compare_ttest(df_merge3_s3, 
                           df_merge3_s3$naffect_post, 
                           df_merge3_s3$naffect_pre,
@@ -2259,7 +1969,7 @@ peace[3] <- tee[["p.value"]]
 
 
 
-# C.14.2.4 Treatment 4 --------------------------------------------------------
+# C.13.2.4 Treatment 4: Societal ----------------------------------------------
 tee <- func_compare_ttest(df_merge4_s3, 
                           df_merge4_s3$naffect_post, 
                           df_merge4_s3$naffect_pre,
@@ -2282,7 +1992,7 @@ peace[4] <- tee[["p.value"]]
 
 
 
-# C.14.2.5 Adjusted p-values --------------------------------------------------
+# C.13.2.5 Adjusted p-values --------------------------------------------------
 padjust <- p.adjust(peace, method = "BH")
 
 pairwise <- bind_cols(pairwise, as_tibble(padjust))
@@ -2296,13 +2006,13 @@ pairwise_naffect_time_s3 <- pairwise
 
 
 
-# C.14.3 Group comparison turnover intention ==================================
+# C.13.3 Group comparison turnover intention ==================================
 # empty vector to store p-values
 peace <- vector(mode = "numeric", length = 4)
 
 pairwise <- func_empty_resultstable()
 
-# C.14.3.1 Treatment 1 --------------------------------------------------------
+# C.13.3.1 Treatment 1: Passive Control ---------------------------------------
 tee <- func_compare_ttest(df_merge1_s3, 
                           df_merge1_s3$turnover_post, 
                           df_merge1_s3$turnover_pre,
@@ -2326,7 +2036,7 @@ peace[1] <- tee[["p.value"]]
 
 
 
-# C.14.3.2 Treatment 2 --------------------------------------------------------
+# C.13.3.2 Treatment 2: Active Control ----------------------------------------
 tee <- func_compare_ttest(df_merge2_s3, 
                           df_merge2_s3$turnover_post, 
                           df_merge2_s3$turnover_pre,
@@ -2350,7 +2060,7 @@ peace[2] <- tee[["p.value"]]
 
 
 
-# C.14.3.3 Treatment 3 --------------------------------------------------------
+# C.13.3.3 Treatment 3: Prosocial ---------------------------------------------
 tee <- func_compare_ttest(df_merge3_s3, 
                           df_merge3_s3$turnover_post, 
                           df_merge3_s3$turnover_pre,
@@ -2373,7 +2083,7 @@ peace[3] <- tee[["p.value"]]
 
 
 
-# C.14.3.4 Treatment 4 --------------------------------------------------------
+# C.14.3.4 Treatment 4: Societal ----------------------------------------------
 tee <- func_compare_ttest(df_merge4_s3, 
                           df_merge4_s3$turnover_post, 
                           df_merge4_s3$turnover_pre,
@@ -2396,7 +2106,7 @@ peace[4] <- tee[["p.value"]]
 
 
 
-# C.14.3.5 Adjusted p-values --------------------------------------------------
+# C.13.3.5 Adjusted p-values --------------------------------------------------
 padjust <- p.adjust(peace, method = "BH")
 
 pairwise <- bind_cols(pairwise, as_tibble(padjust))
@@ -2417,13 +2127,13 @@ pairwise_turnover_time_s3 <- pairwise
 
 
 
-# C.14.4 Group comparison will ================================================
+# C.13.4 Group comparison will ================================================
 # empty vector to store p-values
 peace <- vector(mode = "numeric", length = 4)
 
 pairwise <- func_empty_resultstable()
 
-# C.14.4.1 Treatment 1 --------------------------------------------------------
+# C.13.4.1 Treatment 1: Passive Control ---------------------------------------
 tee <- func_compare_ttest(df_merge1_s3, 
                           df_merge1_s3$willingnessjobrec_post, 
                           df_merge1_s3$willingnessjobrec_pre,
@@ -2447,7 +2157,7 @@ peace[1] <- tee[["p.value"]]
 
 
 
-# C.14.4.2 Treatment 2 --------------------------------------------------------
+# C.13.4.2 Treatment 2: Active Control ----------------------------------------
 tee <- func_compare_ttest(df_merge2_s3, 
                           df_merge2_s3$willingnessjobrec_post, 
                           df_merge2_s3$willingnessjobrec_pre,
@@ -2471,7 +2181,7 @@ peace[2] <- tee[["p.value"]]
 
 
 
-# C.14.4.3 Treatment 3 --------------------------------------------------------
+# C.13.4.3 Treatment 3: Prosocial ---------------------------------------------
 tee <- func_compare_ttest(df_merge3_s3, 
                           df_merge3_s3$willingnessjobrec_post, 
                           df_merge3_s3$willingnessjobrec_pre,
@@ -2494,7 +2204,7 @@ peace[3] <- tee[["p.value"]]
 
 
 
-# C.14.4.4 Treatment 4 -------------------------------------------------------- 
+# C.13.4.4 Treatment 4: Societal ----------------------------------------------
 tee <- func_compare_ttest(df_merge4_s3, 
                           df_merge4_s3$willingnessjobrec_post, 
                           df_merge4_s3$willingnessjobrec_pre,
@@ -2517,7 +2227,7 @@ peace[4] <- tee[["p.value"]]
 
 
 
-# C.14.4.5 Adjusted p-values --------------------------------------------------
+# C.13.4.5 Adjusted p-values --------------------------------------------------
 padjust <- p.adjust(peace, method = "BH")
 
 pairwise <- bind_cols(pairwise, as_tibble(padjust))
@@ -2546,7 +2256,7 @@ pairwise_will_time_s3
 
 
 
-# C.15 Results table paired t-tests ###########################################
+# C.14 Results table paired t-tests ###########################################
 pairwise_paffect_time2_s3 <- 
   pairwise_paffect_time_s3 %>%
   mutate(var = "paffect") %>%
@@ -2646,8 +2356,7 @@ results_table2_time_s3 <- results_table_time_s3 %>%
   mutate(value = factor(value,
                         labels = c("Mean diff.",
                                    "Cohan's d",
-                                   "Welch t-test"))) #%>%
-#mutate(var = as.character(var)) %>%
+                                   "Welch t-test"))) 
 
 results_table2_time_s3
 
@@ -2657,7 +2366,7 @@ results_table2_time_s3
 
 
 
-# C.16 Plot Time ##############################################################
+# C.15 Plot Time (Figure 4) ###################################################
 # Positive affect
 timeplot_paffect <- time_plot_func("paffect_pre", 
                                    "paffect_post",
@@ -2680,64 +2389,4 @@ timeplot_paffect
 timeplot_naffect
 timeplot_turnover
 timeplot_will
-
-
-# C.17 Correlation table ######################################################
-# Prepare data
-df_s3_cor <- df_merge_s3 %>%
-  select(paffect_pre, paffect_post,
-         naffect_pre, naffect_post,
-         turnover_pre, turnover_post,
-         willingnessjobrec_pre, willingnessjobrec_post,
-         prosocialimpact_pre, prosocialimpact_post,
-         societalimpact_pre, societalimpact_post)
-df_s3_cor <- as.data.frame(df_s3_cor)
-
-corstars(df_s3_cor, 
-         method="pearson", 
-         removeTriangle="upper",
-         result="html",
-         cap = "Correlations matrix", 
-         filename = here("analysis", "corr_s3.html"),
-         labels_rows = c("(1) Positive Affect (pre)", 
-                         "(2) Positive Affect (post)", 
-                         "(3) Negative Affect (pre)", 
-                         "(4) Negative Affect (post)", 
-                         "(5) Turnover Int. (pre)", 
-                         "(6) Turnover Int. (pre)", 
-                         "(7) Will. to recommend job (pre)", 
-                         "(8) Will. to recommend job (post)", 
-                         "(9) Prosocial Impact (pre)",
-                         "(10) Prosocial Impact (ppost)",
-                         "(11) Societal Impact (pre)",
-                         "(12) Societal Impact (post)"),
-         labels_cols = 1:11)
-
-
-
-# C.18 Differences betwwen groups with respect to contact with bene ###########
-
-
-
-ttest_bene_s1_13 <- t.test(df_merge1_3$beneficiaries ~ 
-                             df_merge1_3$treatment)
-ttest_bene_s1_14 <- t.test(df_merge1_4$beneficiaries ~ 
-                             df_merge1_4$treatment)
-ttest_bene_s2_13 <- t.test(df_merge1_3_s2$beneficiaries ~ 
-                             df_merge1_3_s2$treatment)
-ttest_bene_s2_14 <- t.test(df_merge1_4_s2$beneficiaries ~ 
-                             df_merge1_4_s2$treatment)
-ttest_bene_s3_13 <- t.test(df_merge1_3_s3$beneficiaries ~ 
-                             df_merge1_3_s3$treatment)
-ttest_bene_s3_14 <- t.test(df_merge1_4_s3$beneficiaries ~ 
-                             df_merge1_4_s3$treatment)
-
-table_ttest_bene <- tibble(Study = c("Study 1", "Study 3"),
-                           prosocial = c(ttest_bene_s1_13[["p.value"]],
-                                   ttest_bene_s3_13[["p.value"]]),
-                           societal = c(ttest_bene_s1_14[["p.value"]],
-                                   ttest_bene_s3_14[["p.value"]]))
-
-
-# write_csv(table_ttest_bene, "table_bene.csv")
 

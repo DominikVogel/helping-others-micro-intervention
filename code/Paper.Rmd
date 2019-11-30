@@ -1,7 +1,10 @@
 ---
-title: Public Service Employees Help Themselves by Helping Others
+title: The Effects of Making Public Service Employees Aware of Their Prosocial and Societal Impact
 classoption: 12pt, a4paper
-subtitle: A Micro-Intervention Study
+subtitle: A Micro-Intervention
+author:
+  - Dominik Vogel (University of Hamburg)
+  - Jurgen Willems (Vienna University of Economics and Management)
 bibliography: Bibliography.bib
 output:
   bookdown::pdf_document2:
@@ -9,21 +12,8 @@ output:
     number_section: no
     template: latex_template.tex
     toc: no
-    keep_tex: yes
+    keep_tex: no
   classoption: 12pt
-  html_document: default
-  html_notebook:
-    number_section: no
-  pdf_document:
-    fig_caption: yes
-    keep_tex: yes
-    number_section: no
-    template: latex_template.tex
-    toc: no
-  bookdown::word_document2:
-    toc: no
-  word_document:
-    toc: no
 csl: chicago-author-date.csl
 header-includes:
 - \usepackage[american]{babel}
@@ -869,7 +859,9 @@ source('Paper_forestplot_societal.R')
 
 
 ```{r, out.width="0.85\\linewidth", include=TRUE, fig.align="center", echo=FALSE, fig.cap=c("\\label{figmeta}")}
-knitr::include_graphics(here("doc/fig", "forestplot_combined.pdf"))
+# The final figure is a combination of the two figures created in Paper_forestplot_prosocial.R and Paper_forestplot_societal.R
+# Combined figures has been created with external software and is imported here
+knitr::include_graphics(here("code", "forestplot_combined.pdf"))
 ```
 
 \vspace{-0.5cm}\singlespacing \small Note: d = Cohen's *d*, BF = Bayes factor, (b) = between, (w) = within. Meta-analytic effect sizes are calculated using an equal-effects model. Meta-analytic Bayes factors are based on the (one-sided) meta-analytic *t*-test by @Rouder.Morey.2011. The other Bayes factors are calculated using one-sided Bayesian *t*-tests [@Rouder.etal.2009] with a non-informative Cauchy prior ($\delta\ \sim\ \text{Cauchy}^{+/-}$(0, 0.707)). Source: Authors. Available at https://doi.org/10.6084/m9.figshare.10732292 under a CC-BY 4.0 license.
@@ -1113,7 +1105,7 @@ Scale: 1 = all the time; 2 = more than once a day; 3 = once a day; 4 = more than
 
 ### Study 1
 
-![Flow of participants in Study 1 through each stage of the experiment. Reporting as advised by @Appelbaum.etal.2018, as well as @Schulz.Altman.etal.2010.](../doc/fig/CONSORT.pdf)
+![Flow of participants in Study 1 through each stage of the experiment. Reporting as advised by @Appelbaum.etal.2018, as well as @Schulz.Altman.etal.2010.](CONSORT.pdf)
 
 \clearpage
 
@@ -1121,13 +1113,13 @@ Scale: 1 = all the time; 2 = more than once a day; 3 = once a day; 4 = more than
 
 
 
-![Flow of participants in Study 2 through each stage of the experiment. Reporting as advised by @Appelbaum.etal.2018, as well as @Schulz.Altman.etal.2010.](../doc/fig/CONSORT2.pdf)
+![Flow of participants in Study 2 through each stage of the experiment. Reporting as advised by @Appelbaum.etal.2018, as well as @Schulz.Altman.etal.2010.](CONSORT2.pdf)
 
 \clearpage
 
 ### Study 3
 
-![Flow of participants in Study 3 through each stage of the experiment. Reporting as advised by @Appelbaum.etal.2018, as well as @Schulz.Altman.etal.2010.](../doc/fig/CONSORT3.pdf)
+![Flow of participants in Study 3 through each stage of the experiment. Reporting as advised by @Appelbaum.etal.2018, as well as @Schulz.Altman.etal.2010.](CONSORT3.pdf)
 
 
 

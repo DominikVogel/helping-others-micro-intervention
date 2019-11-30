@@ -1,4 +1,7 @@
-# THIS IS THE BEGINNING OF STUDY 1 CODE XXXXXXXXXXXXXXXXXXXXXX ################
+###############################################################################
+################ CODE FOR STUDY 1 #############################################
+###############################################################################
+
 
 # A.1 Import data #############################################################
 coltypes <- cols(
@@ -63,19 +66,17 @@ df_merge <- read_csv(here("data", "Study1_public.csv"), col_types = coltypes)
 
 
 
-# A.5 Generate variables ######################################################
+# A.2 Generate variables ######################################################
 
-# A.5.1 Generate factor variables =============================================
+# A.2.1 Generate factor variables =============================================
 df_merge$treatment_f <- factor(df_merge$treatment)
 df_merge$gender_f <- factor(df_merge$gender, 
                             labels = c("Male", "Female", "Other"))
 
 
-# A.5.2 Set NA categories =====================================================
+# A.2.2 Set NA categories =====================================================
 df_merge <- df_merge %>% 
   mutate(educator = ifelse(educator == 2, NA, educator))
-#df_merge <- df_merge %>% 
-#  mutate(sector = ifelse(sector == 4, NA, sector))
 df_merge <- df_merge %>% 
   mutate(subsector = ifelse(subsector == 0, NA, subsector))
 df_merge <- df_merge %>% 
@@ -84,7 +85,7 @@ df_merge <- df_merge %>%
 
 
 
-# A.5.3 Reverse items =========================================================
+# A.2.3 Reverse items =========================================================
 df_merge <- df_merge %>% mutate(turnover1 = 8 - turnover1)
 df_merge <- df_merge %>% mutate(willingnessjobrec2 = 6 - willingnessjobrec2)
 df_merge <- df_merge %>% mutate(taskanalyz1 = 6 - taskanalyz1)
@@ -98,7 +99,7 @@ df_merge <- df_merge %>% mutate(taskvariety4 = 6 - taskvariety4)
 df_merge <- df_merge %>% mutate(taskvariety5 = 6 - taskvariety5)
 
 
-# A.5.4 Create Dummies ========================================================
+# A.2.4 Create Dummies ========================================================
 df_merge <- df_merge %>% mutate(public = ifelse(sector == 1, 1, 0),
                                 public = ifelse(is.na(sector), NA, public))
 df_merge <- df_merge %>% mutate(private = ifelse(sector == 3, 1, 0),
@@ -125,17 +126,17 @@ df_merge <- df_merge %>%
          treatment_dummy4 = ifelse(treatment == 4, 1, 0))
 
 
-# A.5.5 Create age ============================================================
+# A.2.5 Create age ============================================================
 df_merge <- df_merge %>%
   mutate(age = 2018 - yearbirth)
 
 
-# A.5.7 Create completetion time ==============================================
+# A.2.6 Create completetion time ==============================================
 df_merge <- df_merge %>% mutate(completion_time = submitdate - startdate)
 
 
 
-# A.5.8 Create dependent variables ============================================
+# A.2.7 Create dependent variables ============================================
 
 ## Positive Affect
 crona_paffect <- psych::alpha(select(df_merge, paffect1, paffect2, paffect3, 
@@ -159,7 +160,7 @@ crona_turnover <- crona_turnover[["total"]][["raw_alpha"]]
 df_merge <- mean_index(df_merge, "turnover",
                        c("turnover1", "turnover2", "turnover3"))
 
-## willingness to recommend job
+## Willingness to recommend job
 crona_will <- psych::alpha(select(df_merge, 
                                   willingnessjobrec1, willingnessjobrec2))
 crona_will <- crona_will[["total"]][["raw_alpha"]]
@@ -169,7 +170,7 @@ df_merge <- mean_index(df_merge,
                          "willingnessjobrec2"))
 
 
-# A.5.9 Create moderator / control variables ==================================
+# A.2.8 Create moderator / control variables ==================================
 
 ## Contact with beneficiaries
 crona_bene <- psych::alpha(select(df_merge, beneficiaries1, beneficiaries2))
@@ -211,9 +212,9 @@ df_merge <- mean_index(df_merge, "autonomy",
 
 
 
-# A.6 Clean data ##############################################################
+# A.3 Clean data ##############################################################
 
-# A.6.1 Store initial n =======================================================
+# A.3.1 Store initial n =======================================================
 n_total <- tibble(treatment = "total", initial = nrow(df_merge))
 obs <- df_merge %>% 
   group_by(treatment) %>% 
@@ -223,12 +224,16 @@ obs <- bind_rows(n_total, obs)
 rm(n_total)
 
 
-# A.6.2 Remove obs how did not receive treatment ==============================
+# A.3.2 Remove obs how did not receive treatment ==============================
 df_merge <- df_merge %>% 
-  mutate(no_treat = ifelse(treatment == 3 & is.na(duration_treatment_prosocial), 1, 0),
-         no_treat = ifelse(treatment == 4 & is.na(duration_treatment_societal),
+  mutate(no_treat = ifelse(treatment == 3 & 
+                             is.na(duration_treatment_prosocial), 
+                           1, 0),
+         no_treat = ifelse(treatment == 4 & 
+                             is.na(duration_treatment_societal),
                            1, no_treat),
-         no_treat = ifelse(treatment == 2 & is.na(duration_treatment_general),
+         no_treat = ifelse(treatment == 2 & 
+                             is.na(duration_treatment_general),
                            1, no_treat)) %>%
   filter(no_treat != 1) %>%
   select(-no_treat)
@@ -246,7 +251,7 @@ rm(obs_receive)
 
 
 
-# A.6.3 Remove obs how did not answer dependent variable ====================== 
+# A.3.3 Remove obs how did not answer dependent variable ====================== 
 df_merge <- df_merge %>% 
   mutate(mi_dep = ifelse(is.na(paffect) | 
                            is.na(naffect) |
@@ -257,7 +262,7 @@ df_merge <- df_merge %>%
   select(-mi_dep)
 
 
-# A.6.4 Remove obs how did not finish questionnaire ===========================
+# A.3.4 Remove obs how did not finish questionnaire ===========================
 df_merge <- df_merge %>% filter(lastpage == 11)
 
 # Store n
@@ -272,7 +277,7 @@ rm(obs_complete)
 
 
 
-# A.6.5 Remove obs with failed attention check ================================
+# A.3.5 Remove obs with failed attention check ================================
 df_merge <- df_merge %>% 
   filter(attention1 == 3) %>% 
   filter(attention2 == 1)
@@ -288,7 +293,7 @@ obs <- left_join(obs, obs_attention)
 rm(obs_attention)
 
 
-# A.6.6 Remove obs who tried to cheat =========================================
+# A.3.6 Remove obs who tried to cheat =========================================
 df_merge <- df_merge %>% 
   filter(id != 500)
 
@@ -311,7 +316,8 @@ obs
 
 
 
-# A.7 Descriptives ############################################################
+# A.4 Descriptives ############################################################
+# (Prepare Table 2)
 desc <- df_merge %>% 
   group_by(treatment) %>% 
   # Means and SDs per group
@@ -367,7 +373,7 @@ desc
 
 
 
-# A.8 Manipulation Check ######################################################
+# A.5 Manipulation Check ######################################################
 
 ## A: What exactly did we ask you to reflect upon?
 df_merge$manipulationcheck <- 
@@ -398,7 +404,8 @@ summary(aov_prosocialimpact)
 
 
 
-# A.9 ANOVA Hypotheses & descriptives #########################################
+# A.6 Group differences DVs and controls (for Table 2) ########################
+# (ANOVA / Chi2)
 
 ## Positive affect
 aov_paffect <- aov(df_merge$paffect ~ factor(df_merge$treatment))
@@ -440,7 +447,7 @@ summary(aov_will)
 effsize_will_aov <- sjstats::cohens_f(aov_will)
 
 
-# A.9.1 Balance test ==========================================================
+# A.6.1 Balance test ==========================================================
 chi_female <- chisq.test(table(df_merge$gender_f, df_merge$treatment_f))
 chi_manager <- chisq.test(table(df_merge$manager_dummy, df_merge$treatment_f))
 aov_age <- aov(age ~ treatment_f, data = df_merge)
@@ -448,7 +455,7 @@ aov_age <- aov(age ~ treatment_f, data = df_merge)
 
 
 
-# A.10 Group comparisons ######################################################
+# A.7 Group comparisons #######################################################
 
 # Generate treatment factor with reversed oreder of treatments
 # Ensures that the mean differences have the right sign
@@ -457,7 +464,7 @@ df_merge <- df_merge %>%
                                        levels = c("4", "3", "2", "1")))
 
 
-# A.10.1 Generate subsamples ==================================================
+# A.7.1 Generate subsamples ===================================================
 df_merge1 <- df_merge %>% filter(treatment == 1)
 df_merge2 <- df_merge %>% filter(treatment == 2)
 df_merge3 <- df_merge %>% filter(treatment == 3)
@@ -468,7 +475,7 @@ df_merge2_3 <- df_merge %>% filter(treatment == 2 | treatment == 3)
 df_merge2_4 <- df_merge %>% filter(treatment == 2 | treatment == 4)
 
 
-# A.10.2 Group comparison positive affect =====================================
+# A.7.2 Group comparison positive affect ======================================
 
 # empty vector to store p-values
 peace <- vector(mode = "numeric", length = 4)
@@ -481,7 +488,7 @@ pairwise <- pairwise %>% mutate(eff_size_g = NA)
 pairwise <- pairwise %>% mutate(p = NA)
 
 
-# A.10.2.1 1 vs 3 -------------------------------------------------------------
+# A.7.2.1 Passive Control vs. Prosocial ---------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(paffect ~ treatment_f_reversed, data = df_merge1_3,
               alternative = "greater")
@@ -521,7 +528,7 @@ pairwise <- pairwise %>%
 peace[1] <- tee[["p.value"]]
 
 
-# A.10.2.2 1 vs 4 -------------------------------------------------------------
+# A.7.2.2 Passive Control vs. Societal ----------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(paffect ~ treatment_f_reversed, data = df_merge1_4,
               alternative = "greater")
@@ -559,7 +566,7 @@ pairwise <- pairwise %>%
 # Store p-value separatly (for adjustment)
 peace[2] <- tee[["p.value"]]
 
-# A.10.2.3 2 vs 3 -------------------------------------------------------------
+# A.7.2.3 Active Control vs. Prosocial ----------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(paffect ~ treatment_f_reversed, data = df_merge2_3,
               alternative = "greater")
@@ -599,7 +606,7 @@ peace[3] <- tee[["p.value"]]
 
 
 
-# A.10.2.4 2 vs 4 -------------------------------------------------------------
+# A.7.2.4 Active Control vs. Societal -----------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(paffect ~ treatment_f_reversed, data = df_merge2_4,
               alternative = "greater")
@@ -639,7 +646,7 @@ peace[4] <- tee[["p.value"]]
 
 
 
-# A.10.2.5 Adjusted p-values --------------------------------------------------
+# A.7.2.5 Adjusted p-values ---------------------------------------------------
 padjust <- p.adjust(peace, method = "BH")
 
 pairwise <- bind_cols(pairwise, as_tibble(padjust))
@@ -652,7 +659,7 @@ pairwise_paffect <- pairwise
 
 
 
-# A.10.3 Group comparison negative affect =====================================
+# A.7.3 Group comparison negative affect ======================================
 
 # empty vector to store p-values
 peace <- vector(mode = "numeric", length = 4)
@@ -665,7 +672,7 @@ pairwise <- pairwise %>% mutate(eff_size_g = NA)
 pairwise <- pairwise %>% mutate(p = NA)
 
 
-# A.10.3.1 1 vs 3 -------------------------------------------------------------
+# A.7.3.1 Passive Control vs. Prosocial ---------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(naffect ~ treatment_f_reversed, data = df_merge1_3,
               alternative = "less")
@@ -705,7 +712,7 @@ pairwise <- pairwise %>%
 peace[1] <- tee[["p.value"]]
 
 
-# A.10.3.2 1 vs 4 -------------------------------------------------------------
+# A.7.3.2 Passive Control vs. Societal ----------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(naffect ~ treatment_f_reversed, data = df_merge1_4,
               alternative = "less")
@@ -743,7 +750,7 @@ pairwise <- pairwise %>%
 # Store p-value separatly (for adjustment)
 peace[2] <- tee[["p.value"]]
 
-# A.10.3.3 2 vs 3 -------------------------------------------------------------
+# A.7.3.3 Active Control vs. Prosocial ----------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(naffect ~ treatment_f_reversed, data = df_merge2_3,
               alternative = "less")
@@ -783,7 +790,7 @@ peace[3] <- tee[["p.value"]]
 
 
 
-# A.10.3.4 2 vs 4 -------------------------------------------------------------
+# A.7.3.4 Active Control vs. Societal -----------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(naffect ~ treatment_f_reversed, data = df_merge2_4,
               alternative = "less")
@@ -823,7 +830,7 @@ peace[4] <- tee[["p.value"]]
 
 
 
-# A.10.3.5 Adjusted p-values --------------------------------------------------
+# A.7.3.5 Adjusted p-values ---------------------------------------------------
 padjust <- p.adjust(peace, method = "BH")
 
 pairwise <- bind_cols(pairwise, as_tibble(padjust))
@@ -838,7 +845,7 @@ pairwise_naffect <- pairwise
 
 
 
-# A.10.4 Group comparison turnover intention ==================================
+# A.7.4 Group comparison turnover intention ===================================
 
 # empty vector to store p-values
 peace <- vector(mode = "numeric", length = 4)
@@ -851,7 +858,7 @@ pairwise <- pairwise %>% mutate(eff_size_g = NA)
 pairwise <- pairwise %>% mutate(p = NA)
 
 
-# A.10.4.1 1 vs 3 -------------------------------------------------------------
+# A.7.4.1 Passive Control vs. Prosocial ---------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(turnover ~ treatment_f_reversed, data = df_merge1_3,
               alternative = "less")
@@ -891,7 +898,7 @@ pairwise <- pairwise %>%
 peace[1] <- tee[["p.value"]]
 
 
-# A.10.4.2 1 vs 4 -------------------------------------------------------------
+# A.7.4.2 Passive Control vs. Societal ----------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(turnover ~ treatment_f_reversed, data = df_merge1_4,
               alternative = "less")
@@ -929,7 +936,7 @@ pairwise <- pairwise %>%
 # Store p-value separatly (for adjustment)
 peace[2] <- tee[["p.value"]]
 
-# A.10.4.3 2 vs 3 -------------------------------------------------------------
+# A.7.4.3 Active Control vs. Prosocial ----------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(turnover ~ treatment_f_reversed, data = df_merge2_3,
               alternative = "less")
@@ -969,7 +976,7 @@ peace[3] <- tee[["p.value"]]
 
 
 
-# A.10.4.4 2 vs 4 -------------------------------------------------------------
+# A.7.4.4 Active Control vs. Societal -----------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(turnover ~ treatment_f_reversed, data = df_merge2_4,
               alternative = "less")
@@ -1009,7 +1016,7 @@ peace[4] <- tee[["p.value"]]
 
 
 
-# A.10.4.5 Adjusted p-values --------------------------------------------------
+# A.7.4.5 Adjusted p-values ---------------------------------------------------
 padjust <- p.adjust(peace, method = "BH")
 
 pairwise <- bind_cols(pairwise, as_tibble(padjust))
@@ -1023,7 +1030,7 @@ pairwise_turnover <- pairwise
 
 
 
-# A.10.5 Group comparison willingness to recommend job ========================
+# A.7.5 Group comparison willingness to recommend job =========================
 
 # empty vector to store p-values
 peace <- vector(mode = "numeric", length = 4)
@@ -1036,7 +1043,7 @@ pairwise <- pairwise %>% mutate(eff_size_g = NA)
 pairwise <- pairwise %>% mutate(p = NA)
 
 
-# A.10.5.1 1 vs 3 -------------------------------------------------------------
+# A.7.5.1 Passive Control vs. Prosocial ---------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(willingnessjobrec ~ treatment_f_reversed, data = df_merge1_3,
               alternative = "greater")
@@ -1076,7 +1083,7 @@ pairwise <- pairwise %>%
 peace[1] <- tee[["p.value"]]
 
 
-# A.10.5.2 1 vs 4 -------------------------------------------------------------
+# A.7.5.2 Passive Control vs. Societal ----------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(willingnessjobrec ~ treatment_f_reversed, data = df_merge1_4,
               alternative = "greater")
@@ -1114,7 +1121,7 @@ pairwise <- pairwise %>%
 # Store p-value separatly (for adjustment)
 peace[2] <- tee[["p.value"]]
 
-# A.10.5.3 2 vs 3 -------------------------------------------------------------
+# A.7.5.3 Active Control vs. Prosocial ----------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(willingnessjobrec ~ treatment_f_reversed, data = df_merge2_3,
               alternative = "greater")
@@ -1154,7 +1161,7 @@ peace[3] <- tee[["p.value"]]
 
 
 
-# A.10.5.4 2 vs 4 -------------------------------------------------------------
+# A.7.5.4 Active Control vs. Societal -----------------------------------------
 # calculate p-values from t-tests
 tee <- t.test(willingnessjobrec ~ treatment_f_reversed, data = df_merge2_4,
               alternative = "greater")
@@ -1194,7 +1201,7 @@ peace[4] <- tee[["p.value"]]
 
 
 
-# A.10.5.5 Adjusted p-values --------------------------------------------------
+# A.7.5.5 Adjusted p-values ---------------------------------------------------
 padjust <- p.adjust(peace, method = "BH")
 
 pairwise <- bind_cols(pairwise, as_tibble(padjust))
@@ -1217,7 +1224,7 @@ rm(effsize_d, effsize_g, pairwise, tee, padjust, peace)
 
 
 
-# A.11 ANOVA for Descriptives #################################################
+# A.8 Descriptives (Table 2) ##################################################
 aov_paffect_result <- aov_result(aov_paffect)
 aov_naffect_result <- aov_result(aov_naffect)
 aov_turnover_result <- aov_result(aov_turnover)
@@ -1290,9 +1297,9 @@ desc
 
 
 
-# A.12 Plot with mean values per group (Meanplot) #############################
+# A.9 Plot with mean values per group (Figure 1) ##############################
 
-# A.12.1 Prepare data (sd, n, se, ci per treatment per variable) ==============
+# A.9.1 Prepare data (sd, n, se, ci per treatment per variable) ==============
 df_merge_sum <- df_merge %>% 
   select(treatment, paffect, naffect, 
          turnover, willingnessjobrec) %>%
@@ -1366,7 +1373,7 @@ df_merge_sum2 <- df_merge_sum2 %>%
                                    "turnover",
                                    "will")))
 
-# A.12.2 Plot =================================================================
+# A.9.2 Plot =================================================================
 # Define jitter so it is the same for means and CI
 dodge <- position_dodge(.8) # how much jitter on the x-axis?
 
@@ -1465,7 +1472,7 @@ rm(df_merge_sum, df_merge_sum2, df_merge_sum3, df_merge_sum4)
 
 
 
-# A.13 Table with results of group comparisons ################################
+# A.10 Table with results of group comparisons ################################
 pairwise_paffect2 <- 
   pairwise_paffect %>%
   mutate(var = "paffect") %>%
@@ -1555,7 +1562,7 @@ rm(pairwise2, pairwise3, pairwise4, pairwise5,
 
 
 
-# A.15 Regression with beneficiary contact (H4) ###############################
+# A.11 Regression with beneficiary contact (H4) ###############################
 # Model 1: Treatment only
 reg_paffect <- lm(paffect ~ treatment_f, data = df_merge)
 reg_naffect <- lm(naffect ~ treatment_f, data = df_merge)
