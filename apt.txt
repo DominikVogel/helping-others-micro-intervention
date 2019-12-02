@@ -1,5 +1,0 @@
-texlive-full
-dvipng
-ghostscript
-latexmk
-texlive
