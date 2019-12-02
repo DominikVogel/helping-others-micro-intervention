@@ -1,9 +1,4 @@
-texlive-latex-base
-texlive-latex-recommended
-texlive-science
-texlive-latex-extra
-texlive-fonts-recommended
-texlive-lang-english
+texlive-full
 dvipng
 ghostscript
 latexmk
