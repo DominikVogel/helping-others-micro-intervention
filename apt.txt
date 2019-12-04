@@ -7,4 +7,3 @@ texlive-lang-english
 dvipng
 ghostscript
 libgsl-dev
-libgsl0ldbl
