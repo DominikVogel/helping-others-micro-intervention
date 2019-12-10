@@ -45,18 +45,18 @@ You can inspect the *R* code by clicking on the files in the left panel (see bel
 
 If you want to reproduce our results on your own computer you need *R* (we used version 3.5.3) and RStudio. 
 
-1. Download the full OSF Storage of the Project (including `.here` and the folders `code` and `data`
-2. Make sure to install all required packages (see `DESCRIPTION` file)
-2. Open `code/Paper.Rmd` in RStudio.
-3. Press `Knit` and than select `Knit to pdf_document2`
-4. *R* runs all analyses and creates the full paper as a PDF document. 
+1. Download the `.here` file and the folders `code` and `data`
+2. Make sure that you installed all required packages (see below for a list of required packages)
+3. Open `code/Paper.Rmd` in RStudio.
+4. Press `Knit` and than select `Knit to pdf_document2`
+5. *R* runs all analyses and creates the full paper as a PDF document. 
 
 
 ## On your own machine (using Docker)
 
 1. Install Docker Community Edition
-2. Download the `Docker-Capsule.zip` file and extract it
-3. Open Terminal and go to extracted folder
+2. Download the `Docker-Capsule.zip` file from the [OSF Project Repository][4] and extract it
+3. Open a Terminal and navigate to the extracted folder
 4. Execute the following command: 
     ```shell
     docker load --input micro-intervention.tar
@@ -133,3 +133,4 @@ checkpoint("2019-04-01")
   [1]: https://mybinder.org
   [2]: https://codeocean.com
   [3]: https://mybinder.org
+  [4]: https://doi.org/10.17605/OSF.IO/W97H4
