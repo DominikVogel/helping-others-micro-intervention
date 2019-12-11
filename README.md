@@ -10,7 +10,7 @@ The **main repository** can be found here: https://doi.org/10.17605/OSF.IO/W97H4
 
 The **codebook** for the data can be found here: https://dominikvogel.github.io/helping-others-micro-intervention/
 
-A **long-term archived** version of the data and code is available at XXX
+A **long-term archived** version of the data and code is available at https://doi.org/10.5281/zenodo.3570986
 
 There is a **Code Ocean Capsule** for long-term computational reproducibility: https://doi.org/10.24433/CO.2463564.v1. See below for more information.
 
