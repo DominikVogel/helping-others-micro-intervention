@@ -1,5 +1,5 @@
 <!-- badges: start -->
-[![Launch Rstudio Binder](http://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/DominikVogel/helping-others-micro-intervention/binder-running?urlpath=rstudio)
+[![Launch Rstudio Binder](http://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/DominikVogel/helping-others-micro-intervention/binder-running?urlpath=rstudio) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![](https://img.shields.io/badge/CodeOcean-Capsule-green.svg)](https://doi.org/10.24433/CO.2463564.v1) [![Zenodo](https://img.shields.io/badge/Zenodo-long--time%20archive-informational)](https://zenodo.org/badge/latestdoi/223441260)
 <!-- badges: end -->
 
 # The effects of making public service employees aware of their prosocial and societal impact
