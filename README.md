@@ -4,7 +4,7 @@
 
 # The effects of making public service employees aware of their prosocial and societal impact
 
-**Repository** for Vogel, D., & Willems, J. (2019). The effects of making public service employees aware of their prosocial and societal impact: A micro-intervention. *Journal of Public Administration Research and Theory*.
+**Repository** for Vogel, D., & Willems, J. (2020). The effects of making public service employees aware of their prosocial and societal impact: A microintervention. *Journal of Public Administration Research and Theory*. https://doi.org/10.1093/jopart/muz044
 
 The **main repository** can be found here: https://doi.org/10.17605/OSF.IO/W97H4
 
